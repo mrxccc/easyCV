@@ -1,0 +1,39 @@
+spring:
+  application:
+    name: easyCV
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/easycv?characterEncoding=utf-8&allowMultiQueries=true
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:fBjDSpr9-da}
+    hikari:
+      minimum-idle: 5
+      idle-timeout: 600000
+      maximum-pool-size: 10
+      auto-commit: true
+      pool-name: MyHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+server:
+  port: 9500
+
+mybatis:
+  type-aliases-package: com.mrxccc.easycv.server.domain
+  mapper-locations: classpath:mapper/*.xml
+
+#最大工作线程
+record.maxsize: 10
+#录像文件存储路径（该路径应该放在http/ftp服务中，方便取用/播放）
+#record.dir:
+#录像播放地址（该地址应当为http/ftp服务访问地址，方便取用/播放录像）
+#play.url: http://localhost:81/
+springfox:
+  documentation:
+    swagger-ui:
+      enabled: true
+logging:
+  level:
+    cn.mrxccc.easycv: debug
