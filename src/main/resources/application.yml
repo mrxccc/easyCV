@@ -1,6 +1,9 @@
 spring:
   application:
     name: easyCV
+  devtools:
+    restart:
+      enabled: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: org.mariadb.jdbc.Driver
@@ -16,7 +19,14 @@ spring:
       max-lifetime: 1800000
       connection-timeout: 30000
       connection-test-query: SELECT 1
-
+  thymeleaf:
+    cache: false # 开发时关闭缓存,不然没法看到实时页面
+    mode: HTML5 # 用非严格的 HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+    servlet:
+      content-type: text/html
 server:
   port: 9500
 
@@ -30,10 +40,7 @@ record.maxsize: 10
 #record.dir:
 #录像播放地址（该地址应当为http/ftp服务访问地址，方便取用/播放录像）
 #play.url: http://localhost:81/
-springfox:
-  documentation:
-    swagger-ui:
-      enabled: true
+#  packages-to-scan: cn.mrxccc.easycv.contrller
 logging:
   level:
     cn.mrxccc.easycv: debug

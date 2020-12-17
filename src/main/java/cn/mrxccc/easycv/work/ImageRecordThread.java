@@ -1,18 +1,18 @@
 package cn.mrxccc.easycv.work;
 
-import java.io.IOException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
+
+import java.io.IOException;
 
 /**
  * @author mrxccc
  * @create 2020/12/16
  */
 @Slf4j
-public class RecordThread extends Thread {
+public class ImageRecordThread extends Thread {
 
     /**
      * 开始状态
@@ -43,7 +43,7 @@ public class RecordThread extends Thread {
      * @param record       -录制器
      * @param err_stop_num 允许的错误次数，超过该次数后即停止任务
      */
-    public RecordThread(String name, FFmpegFrameGrabber grabber, FFmpegFrameRecorder record, Integer err_stop_num) {
+    public ImageRecordThread(String name, FFmpegFrameGrabber grabber, FFmpegFrameRecorder record, Integer err_stop_num) {
         super(name);
         this.grabber = grabber;
         this.record = record;
@@ -120,8 +120,9 @@ public class RecordThread extends Thread {
         //暂停次数
         int pause_num = 0;
         try {
+            // 由于图片只有一帧，重复调用grab自然会抛出异常，所以只调用一次
+            Frame pkt = grabber.grabImage();
             for (; status == START_STATUS; frame_index++) {
-                Frame pkt = grabber.grabImage();
                 //暂停状态
                 if (pause == 1) {
                     pause_num++;

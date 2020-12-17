@@ -1,5 +1,6 @@
 package cn.mrxccc.easycv.recorder;
 
+import cn.mrxccc.easycv.work.ImageRecordThread;
 import cn.mrxccc.easycv.work.RecordThread;
 import org.bytedeco.ffmpeg.avformat.AVFormatContext;
 import org.bytedeco.ffmpeg.global.avcodec;
@@ -31,7 +32,7 @@ public class ImageRecord implements Recorder {
     /**
      * 当前线程
      */
-    protected RecordThread cuThread;
+    protected ImageRecordThread cuThread;
 
     FFmpegFrameGrabber grabber = null;
     FFmpegFrameRecorder record = null;
@@ -52,11 +53,11 @@ public class ImageRecord implements Recorder {
     // 像素格式
     private int pixelFormat;
 
-    public RecordThread getCuThread() {
+    public ImageRecordThread getCuThread() {
         return cuThread;
     }
 
-    public void setCuThread(RecordThread cuThread) {
+    public void setCuThread(ImageRecordThread cuThread) {
         this.cuThread = cuThread;
     }
 
@@ -159,7 +160,7 @@ public class ImageRecord implements Recorder {
 
     @Override
     public Recorder from(String src) throws FrameGrabber.Exception {
-        av_log_set_level(AV_LOG_ERROR);
+//        av_log_set_level(AV_LOG_ERROR);
         if (src == null) {
             throw new FrameGrabber.Exception("源视频不能为空");
         }
@@ -175,13 +176,6 @@ public class ImageRecord implements Recorder {
         grabber.setImageScalingFlags(imageScalingFlags);
         grabber.setPixelFormat(pixelFormat);//使用avutil中的像素格式常量，例如：avutil.AV_PIX_FMT_NONE
         grabber.setVideoCodec(videoCodec);//使用avcodec中的编码常量，例如：avcodec.AV_CODEC_ID_NONE
-
-        grabber.setAudioCodecName(null);//如果为空，会触发自动检索音频编码
-        /*设置下面三个参数会触发ffmpeg的swresample音频重采样*/
-        //在对音频编码解码成pcm之后，如果sampleFormat与pcm不同，则会对音频采样格式进行转换
-        grabber.setSampleFormat(avutil.AV_SAMPLE_FMT_NONE);//音频采样格式,使用avutil中的像素格式常量，例如：avutil.AV_SAMPLE_FMT_NONE
-        grabber.setAudioChannels(0);
-        grabber.setSampleRate(0);
         grabber.start();
         return this;
     }
@@ -193,7 +187,7 @@ public class ImageRecord implements Recorder {
         }
         this.out = out;
         // 录制/推流器
-        record = new FFmpegFrameRecorder(out, width, height, 0);
+        record = new FFmpegFrameRecorder(out, grabber.getImageWidth(), grabber.getImageHeight(), 0);
         record.setOption("rtsp_transport", "tcp");
         record.setVideoCodecName(null);//优先级高于videoCodec
         record.setPixelFormat(pixelFormat);// 只有pixelFormat，width，height三个参数任意一个不为空才会进行像素格式转换
@@ -203,21 +197,20 @@ public class ImageRecord implements Recorder {
         record.setFrameRate(framerate);
         record.setVideoBitrate(-1);
         record.setVideoQuality(-1);
-        record.setFormat("rtsp");
         AVFormatContext fc = null;
         record.setVideoCodec(avcodec.AV_CODEC_ID_NONE);
         //rtmp、rtsp和flv
-//        if (hasRTMPFLV(out)) {
-//            // 封装格式flv，并使用h264和aac编码
-//            record.setFormat("flv");
-//            if (hasRTMPFLV(src)) {
-//                fc = grabber.getFormatContext();
-//            }
-//        } else if (hasMP4(out)) {//MP4
-//            record.setFormat("mp4");
-//        } else if (hasRTSP(out)) {
-//            record.setFormat("rtsp");
-//        }
+        if (hasRTMPFLV(out)) {
+            // 封装格式flv，并使用h264和aac编码
+            record.setFormat("flv");
+            if (hasRTMPFLV(src)) {
+                fc = grabber.getFormatContext();
+            }
+        } else if (hasMP4(out)) {//MP4
+            record.setFormat("mp4");
+        } else if (hasRTSP(out)) {
+            record.setFormat("rtsp");
+        }
         record.start();
         return this;
     }
@@ -249,7 +242,7 @@ public class ImageRecord implements Recorder {
     public Recorder start() {
         if (cuThread == null) {
             String name = THREAD_NAME + nextThreadNum();
-            cuThread = new RecordThread(name, grabber, record, 1);
+            cuThread = new ImageRecordThread(name, grabber, record, 1);
             cuThread.setDaemon(false);
             cuThread.start();
         } else {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>springboot-thymeleaf demo</title>
+</head>
+<body>
+<div>
+    <span>图片列表</span>
+    <table>
+        <thead>
+        <tr>
+            <th>姓名11</th>
+            <th>年龄</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="img : ${imageList}">
+            <td th:text="${img.id}"></td>
+            <td th:text="${img.imgName}"></td>
+            <td th:text="${img.imgPath}"></td>
+            <td th:text="${img.createTime}"></td>
+            <td th:text="${img.updateTime}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

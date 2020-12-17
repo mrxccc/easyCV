@@ -7,8 +7,7 @@ import cn.mrxccc.easycv.entity.RecordInfo;
 import cn.mrxccc.easycv.entity.RecordTask;
 import cn.mrxccc.easycv.serivce.RecordService;
 import cn.mrxccc.easycv.util.CommonUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,21 +16,21 @@ import org.springframework.web.bind.annotation.*;
  * @author mrxccc
  * @create 2020/12/16
  */
-@Api(tags = "录制管理")
-@RestController("record")
+@RestController
+@RequestMapping("/record")
 @Slf4j
 public class RecordController {
     @Autowired
     RecordService recorderService;
 
     /**
-     * 录像
+     * 图片录像
      *
      * @return
      */
-    @ApiOperation("录像")
-    @PostMapping("/start")
-    public ResponseResult record(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
+    @Operation(summary = "图片录像",tags = "录制管理")
+    @PostMapping("/imageRecord")
+    public ResponseResult imageRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
         ResponseResult<Object> result = new ResponseResult<>();
         if (CommonUtil.isAllNullOrEmpty(src, out)) {
             result.setMessage("失败");
@@ -54,11 +53,40 @@ public class RecordController {
     }
 
     /**
+     * 视频录像
+     *
+     * @return
+     */
+    @Operation(summary = "视频录像",tags = "录制管理")
+    @PostMapping("/videoRecord")
+    public ResponseResult videoRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
+        ResponseResult<Object> result = new ResponseResult<>();
+        if (CommonUtil.isAllNullOrEmpty(src, out)) {
+            result.setMessage("失败");
+            return result;
+        }
+
+        RecordTask rt = null;
+        try {
+            rt = recorderService.record(src, out);
+            if (rt != null) {
+                result.setState(1);
+                result.setMessage(rt.getId().toString());
+                return result;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        result.setMessage("失败");
+        return result;
+    }
+
+    /**
      * 停止录像
      *
      * @return
      */
-    @ApiOperation("停止录像")
+    @Operation(method = "停止录像",tags = "录制管理")
     @GetMapping("/stop")
     public ResponseResult stop(@RequestParam(required = true) Integer id) {
         ResponseResult<Object> result = new ResponseResult<>();
@@ -81,7 +109,7 @@ public class RecordController {
      * @param isWork
      * @return
      */
-    @ApiOperation("列表")
+    @Operation(method = "列表",tags = "录制管理")
     @GetMapping("/list")
     public List<?> list(@RequestParam(required = false) String isWork) {
         boolean flag = (isWork != null && isWork.length() > 0 && isWork.equals("true")) ? true : false;
@@ -93,7 +121,7 @@ public class RecordController {
      *
      * @return
      */
-    @ApiOperation("根据id查询")
+    @Operation(method = "根据id查询",tags = "录制管理")
     @GetMapping("/get")
     public ResponseResult get(@RequestParam(required = true) Integer id) {
         ResponseResult<RecordInfo> result = new ResponseResult<>();
