@@ -1,6 +1,8 @@
-package cn.mrxccc.easycv.web;
+package cn.mrxccc.easycv.controller;
 
 import cn.mrxccc.easycv.api.ImageApi;
+import cn.mrxccc.easycv.config.MyProperties;
+import cn.mrxccc.easycv.domain.Img;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.serivce.ImgService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -23,6 +26,9 @@ import java.util.UUID;
 public class ImageController implements ImageApi {
     @Autowired
     private ImgService imgService;
+
+    @Autowired
+    private MyProperties myProperties;
     /**
      * 获取全部资源
      *
@@ -31,13 +37,13 @@ public class ImageController implements ImageApi {
     @Override
     public String index(Model model) {
         model.addAttribute("imageList", imgService.selectAll());
-        return "imagelist";
+        return "index";
     }
 
 
     @Override
     public ResponseResult<String> upload(@RequestParam("file") MultipartFile file) {
-        String filePath= System.getProperty("java.io.tmpdir") + "badcaseDir" + File.separator;
+        String filePath= myProperties.getImageDirPath();
         System.out.println(filePath);
         String fileName = UUID.randomUUID() + file.getOriginalFilename();
         log.info("转换后的文件名为：[{}]!!", fileName);
@@ -49,6 +55,12 @@ public class ImageController implements ImageApi {
 
         try {
             file.transferTo(dest);
+            Img img = new Img();
+            img.setImgName(dest.getName());
+            img.setImgPath(dest.getPath());
+            img.setCreateTime(LocalDateTime.now());
+            img.setUpdateTime(LocalDateTime.now());
+            imgService.insertOrUpdate(img);
             return new ResponseResult(0, "上传成功", null);
         } catch (IOException e) {
             log.error("上传文件过程中发生异常！", e);

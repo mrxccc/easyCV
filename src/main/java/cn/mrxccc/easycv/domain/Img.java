@@ -1,6 +1,6 @@
 package cn.mrxccc.easycv.domain;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import javax.persistence.*;
 import lombok.Data;
 
@@ -31,11 +31,11 @@ public class Img {
      * 创建日期
      */
     @Column(name = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 修改日期
      */
     @Column(name = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

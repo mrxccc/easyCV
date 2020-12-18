@@ -2,6 +2,7 @@ package cn.mrxccc.easycv.controller;
 
 import java.util.List;
 
+import cn.mrxccc.easycv.api.RecordApi;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.entity.RecordInfo;
 import cn.mrxccc.easycv.entity.RecordTask;
@@ -10,16 +11,17 @@ import cn.mrxccc.easycv.util.CommonUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
  * @author mrxccc
  * @create 2020/12/16
  */
-@RestController
+@Controller
 @RequestMapping("/record")
 @Slf4j
-public class RecordController {
+public class RecordController implements RecordApi {
     @Autowired
     RecordService recorderService;
 
@@ -28,8 +30,8 @@ public class RecordController {
      *
      * @return
      */
-    @Operation(summary = "图片录像",tags = "录制管理")
-    @PostMapping("/imageRecord")
+    @Override
+    @ResponseBody
     public ResponseResult imageRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
         ResponseResult<Object> result = new ResponseResult<>();
         if (CommonUtil.isAllNullOrEmpty(src, out)) {
@@ -57,8 +59,8 @@ public class RecordController {
      *
      * @return
      */
-    @Operation(summary = "视频录像",tags = "录制管理")
-    @PostMapping("/videoRecord")
+    @Override
+    @ResponseBody
     public ResponseResult videoRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
         ResponseResult<Object> result = new ResponseResult<>();
         if (CommonUtil.isAllNullOrEmpty(src, out)) {
@@ -86,8 +88,8 @@ public class RecordController {
      *
      * @return
      */
-    @Operation(method = "停止录像",tags = "录制管理")
-    @GetMapping("/stop")
+    @Override
+    @ResponseBody
     public ResponseResult stop(@RequestParam(required = true) Integer id) {
         ResponseResult<Object> result = new ResponseResult<>();
         result.setState(0);
@@ -109,8 +111,8 @@ public class RecordController {
      * @param isWork
      * @return
      */
-    @Operation(method = "列表",tags = "录制管理")
-    @GetMapping("/list")
+    @Override
+    @ResponseBody
     public List<?> list(@RequestParam(required = false) String isWork) {
         boolean flag = (isWork != null && isWork.length() > 0 && isWork.equals("true")) ? true : false;
         return recorderService.list(flag);
@@ -121,7 +123,9 @@ public class RecordController {
      *
      * @return
      */
+    @Override
     @Operation(method = "根据id查询",tags = "录制管理")
+    @ResponseBody
     @GetMapping("/get")
     public ResponseResult get(@RequestParam(required = true) Integer id) {
         ResponseResult<RecordInfo> result = new ResponseResult<>();

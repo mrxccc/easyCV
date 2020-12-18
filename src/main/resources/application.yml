@@ -27,6 +27,14 @@ spring:
     suffix: .html
     servlet:
       content-type: text/html
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  resources:
+    static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+  mvc:
+    static-path-pattern: /static/**
 server:
   port: 9500
 

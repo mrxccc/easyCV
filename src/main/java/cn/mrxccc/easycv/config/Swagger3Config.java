@@ -11,10 +11,18 @@ import org.springframework.context.annotation.Configuration;
  * @create 2020/12/16
  */
 @Configuration
-public class Swagger3Config{
+public class Swagger3Config {
 
     @Bean
-    public GroupedOpenApi  createImageRestApi() {
+    public GroupedOpenApi createAllRestApi() {
+        return GroupedOpenApi.builder()
+                .group("ALL")
+                .pathsToMatch("/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi createImageRestApi() {
         return GroupedOpenApi.builder()
                 .group("图片管理")
                 .pathsToMatch("/images/**")
@@ -22,7 +30,7 @@ public class Swagger3Config{
     }
 
     @Bean
-    public GroupedOpenApi  createRecordRestApi() {
+    public GroupedOpenApi createRecordRestApi() {
         return GroupedOpenApi.builder()
                 .group("录像管理")
                 .pathsToMatch("/record/**")

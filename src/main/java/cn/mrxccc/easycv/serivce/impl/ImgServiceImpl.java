@@ -1,9 +1,6 @@
 package cn.mrxccc.easycv.serivce.impl;
 
-import cn.mrxccc.easycv.imagepusher.ImagePusher;
 import lombok.extern.slf4j.Slf4j;
-import org.bytedeco.ffmpeg.global.avcodec;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import cn.mrxccc.easycv.mapper.ImgMapper;
@@ -16,9 +13,6 @@ public class ImgServiceImpl implements ImgService{
 
     @Resource
     private ImgMapper imgMapper;
-
-    @Value("rtsp.url:rtsp://localhost/testVideoStream")
-    private String rtspUrl;
 
     @Override
     public int updateBatch(List<Img> list) {
