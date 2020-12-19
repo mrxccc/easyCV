@@ -22,6 +22,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <spring-boot-mapper.version>2.1.5</spring-boot-mapper.version>
     <javacv-platform.version>1.5.4</javacv-platform.version>
+    <jacoco.version>0.8.6</jacoco.version>
   </properties>
 
   <licenses>
@@ -115,6 +116,11 @@
       <scope>runtime</scope>
       <optional>true</optional>
     </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -127,6 +133,34 @@
           <fork>true</fork>
           <addResources>true</addResources>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>${jacoco.version}</version>
+        <configuration>
+          <destFile>${basedir}/target/coverage-reports/jacoco-unit.exec</destFile>
+          <dataFile>${basedir}/target/coverage-reports/jacoco-unit.exec</dataFile>
+          <output>file</output>
+          <append>true</append>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>jacoco-initialize</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+            <phase>test-compile</phase>
+          </execution>
+          <execution>
+            <id>jacoco-site</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -149,6 +183,25 @@
       </snapshots>
     </repository>
   </repositories>
+
+  <profiles>
+    <profile>
+      <id>sonar</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <!--                <sonar.jdbc.url>jdbc:postgresql://localhost/sonar</sonar.jdbc.url>-->
+        <!--                <sonar.jdbc.driver>org.postgresql.Driver</sonar.jdbc.driver>-->
+        <!--                <sonar.jdbc.username>user</sonar.jdbc.username>-->
+        <!--                <sonar.jdbc.password>password</sonar.jdbc.password>-->
+        <sonar.host.url>http://10.199.1.210:59000</sonar.host.url>
+        <!--                <sonar.login>admin</sonar.login>-->
+        <!--                <sonar.password>admin</sonar.password>-->
+        <sonar.login>2fcb355064b7e85703fefde208d91a6eabc529c2</sonar.login>
+      </properties>
+    </profile>
+  </profiles>
 
   <pluginRepositories>
     <pluginRepository>

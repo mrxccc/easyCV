@@ -5,29 +5,22 @@
     <title>Title</title>
 </head>
 <body th:fragment="foot">
+<!-- REQUIRED SCRIPTS -->
 <!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<!--<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>-->
+<!--<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>-->
 <![endif]-->
 
-<script th:src="@{{adminlte}/bower_components/jquery/dist/jquery.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/bower_components/jquery-ui/jquery-ui.min.js(adminlte=${adminlte})}"></script>
-<script>
-    $.widget.bridge('uibutton', $.ui.button);
-</script>
-<script th:src="@{{adminlte}/bower_components/bootstrap/dist/js/bootstrap.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/bower_components/jquery-slimscroll/jquery.slimscroll.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/plugins/jquery-validation/js/jquery.validate.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/plugins/jquery-validation/js/additional-methods.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/plugins/jquery-validation/js/localization/messages_zh.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/plugins/iCheck/icheck.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/bower_components/datatables.net/js/jquery.dataTables.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js(adminlte=${adminlte})}"></script>
-<script th:src="@{{adminlte}/bower_components/fastclick/lib/fastclick.js(adminlte=${adminlte})}"></script>
+<!-- jQuery -->
+<script th:src="@{{adminlte}/plugins/jquery/jquery.min.js(adminlte=${adminlte})}"></script>
+<script th:src="@{{adminlte}/plugins/jquery-ui/jquery-ui.min.js(adminlte=${adminlte})}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<!-- Bootstrap 4 -->
+<script th:src="@{{adminlte}/plugins/bootstrap/js/bootstrap.bundle.min.js(adminlte=${adminlte})}"></script>
+<script th:src="@{{adminlte}/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js(adminlte=${adminlte})}"></script>
+<!-- AdminLTE App -->
 <script th:src="@{{adminlte}/dist/js/adminlte.min.js(adminlte=${adminlte})}"></script>
-
-<script src="/static/assets/app/validate.js"></script>
-<script src="/static/assets/app/app.js"></script>
-<script src="/static/assets/app/datetime.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script th:src="@{{adminlte}/dist/js/demo.js(adminlte=${adminlte})}"></script>
 </body>
 </html>

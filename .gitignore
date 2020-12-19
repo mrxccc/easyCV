@@ -5,6 +5,7 @@ logs/*
 */logs/*
 **/target/*
 **/.flattened-pom.xml
+.scannerwork
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**

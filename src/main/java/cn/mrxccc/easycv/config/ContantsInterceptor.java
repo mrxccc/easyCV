@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Configuration
 public class ContantsInterceptor implements HandlerInterceptor {
-    private static final String HOST_CDN = "http://123.56.158.85/cdn/";
+    private static final String HOST_CDN = "http://10.199.1.210/AdminLTE-3.1.0-rc/";
 
     private static final String TEMPLATE_ADMIN_LET = "adminlte/v2.4.3";
 
@@ -27,7 +27,7 @@ public class ContantsInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (modelAndView != null) {
-            modelAndView.addObject("adminlte", HOST_CDN + TEMPLATE_ADMIN_LET);
+            modelAndView.addObject("adminlte", HOST_CDN );
         }
     }
 

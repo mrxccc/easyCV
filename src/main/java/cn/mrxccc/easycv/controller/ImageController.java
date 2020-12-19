@@ -5,6 +5,7 @@ import cn.mrxccc.easycv.config.MyProperties;
 import cn.mrxccc.easycv.domain.Img;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.serivce.ImgService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,10 +35,17 @@ public class ImageController implements ImageApi {
      *
      * @return
      */
-    @Override
+    @Operation(summary = "图片列表")
+    @GetMapping("/index")
     public String index(Model model) {
-        model.addAttribute("imageList", imgService.selectAll());
         return "index";
+    }
+
+    @Operation(summary = "图片列表")
+    @GetMapping("/images/list")
+    public String imagesList(Model model) {
+        model.addAttribute("imageList", imgService.selectAll());
+        return "imagelist";
     }
 
 

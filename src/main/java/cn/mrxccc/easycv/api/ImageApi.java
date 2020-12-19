@@ -19,10 +19,6 @@ import javax.validation.Valid;
 @Tag(name = "image", description = "the images api")
 public interface ImageApi {
 
-    @Operation(summary = "图片列表")
-    @GetMapping("/images/list")
-    String index(Model model);
-
     @Operation(summary = "图片上传")
     @ResponseBody
     @PostMapping(value = "/images/upload", produces = { "application/json" })
