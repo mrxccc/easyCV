@@ -1,6 +1,7 @@
 package cn.mrxccc.easycv.config;
 
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -16,11 +17,18 @@ import java.io.File;
 public class MyProperties implements ApplicationContextAware {
     private String imageDirPath;
 
+    public String getRtspPlayUrl() {
+        return rtspPlayUrl;
+    }
+
+    @Value("${easycv.rtsp.play-url}")
+    private String rtspPlayUrl;
+
     public String getImageDirPath() {
         return imageDirPath;
     }
 
-    public void setImageDirPath(String imageDirPath) {
+    private void setImageDirPath(String imageDirPath) {
         this.imageDirPath = imageDirPath;
     }
 

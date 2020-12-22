@@ -15,14 +15,6 @@ import java.util.List;
  */
 @Tag(name = "record", description = "the record api")
 public interface RecordApi {
-    /**
-     * 图片录像
-     *
-     * @return
-     */
-    @Operation(summary = "图片录像",tags = "录制管理")
-    @PostMapping("/imageRecord")
-    public ResponseResult imageRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out);
 
     /**
      * 视频录像
@@ -30,8 +22,8 @@ public interface RecordApi {
      * @return
      */
     @Operation(summary = "视频录像",tags = "录制管理")
-    @PostMapping("/videoRecord")
-    public ResponseResult videoRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out);
+    @PostMapping("/start")
+    public ResponseResult start(@RequestParam(required = true) String src, @RequestParam(required = true) String out);
 
     /**
      * 停止录像

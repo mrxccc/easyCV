@@ -93,10 +93,10 @@ public class DefaultTasksManager implements TasksManager {
      * @param maxSize -最大工作任务大小
      * @throws Exception
      */
-    public DefaultTasksManager(int maxSize) throws Exception {
+    public DefaultTasksManager(int maxSize){
         super();
         if (maxSize < 1) {
-            throw new Exception("maxSize不能空不能小于1");
+            log.error("maxSize不能空不能小于1");
         }
         this.maxSize = maxSize;
         this.workpool = new ConcurrentLinkedQueue<>();

@@ -3,6 +3,7 @@ package cn.mrxccc.easycv.controller;
 import java.util.List;
 
 import cn.mrxccc.easycv.api.RecordApi;
+import cn.mrxccc.easycv.domain.ImgRecordTask;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.entity.RecordInfo;
 import cn.mrxccc.easycv.entity.RecordTask;
@@ -26,42 +27,13 @@ public class RecordController implements RecordApi {
     RecordService recorderService;
 
     /**
-     * 图片录像
-     *
-     * @return
-     */
-    @Override
-    @ResponseBody
-    public ResponseResult imageRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
-        ResponseResult<Object> result = new ResponseResult<>();
-        if (CommonUtil.isAllNullOrEmpty(src, out)) {
-            result.setMessage("失败");
-            return result;
-        }
-
-        RecordTask rt = null;
-        try {
-            rt = recorderService.recordImg(src, out);
-            if (rt != null) {
-                result.setState(1);
-                result.setMessage(rt.getId().toString());
-                return result;
-            }
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-        }
-        result.setMessage("失败");
-        return result;
-    }
-
-    /**
      * 视频录像
      *
      * @return
      */
     @Override
     @ResponseBody
-    public ResponseResult videoRecord(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
+    public ResponseResult start(@RequestParam(required = true) String src, @RequestParam(required = true) String out) {
         ResponseResult<Object> result = new ResponseResult<>();
         if (CommonUtil.isAllNullOrEmpty(src, out)) {
             result.setMessage("失败");

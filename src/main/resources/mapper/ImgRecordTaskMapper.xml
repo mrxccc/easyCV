@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mrxccc.easycv.mapper.ImgRecordTaskMapper">
+  <resultMap id="BaseResultMap" type="cn.mrxccc.easycv.domain.ImgRecordTask">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    <!--@Table img_record_task-->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="imageId" jdbcType="INTEGER" property="imageid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="play_url" jdbcType="VARCHAR" property="playUrl" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    id, imageId, `status`, play_url, create_time, update_time, end_time
+  </sql>
+  <update id="updateBatch" parameterType="java.util.List">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    update img_record_task
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="imageId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.imageid,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="`status` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.status,jdbcType=INTEGER}
+        </foreach>
+      </trim>
+      <trim prefix="play_url = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.playUrl,jdbcType=VARCHAR}
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.createTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.updateTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+      <trim prefix="end_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          when id = #{item.id,jdbcType=INTEGER} then #{item.endTime,jdbcType=TIMESTAMP}
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <update id="updateBatchSelective" parameterType="java.util.List">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    update img_record_task
+    <trim prefix="set" suffixOverrides=",">
+      <trim prefix="imageId = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.imageid != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.imageid,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="`status` = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.status != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.status,jdbcType=INTEGER}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="play_url = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.playUrl != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.playUrl,jdbcType=VARCHAR}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="create_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.createTime != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.createTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="update_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.updateTime != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.updateTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+      <trim prefix="end_time = case" suffix="end,">
+        <foreach collection="list" index="index" item="item">
+          <if test="item.endTime != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.endTime,jdbcType=TIMESTAMP}
+          </if>
+        </foreach>
+      </trim>
+    </trim>
+    where id in
+    <foreach close=")" collection="list" item="item" open="(" separator=", ">
+      #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+  <insert id="batchInsert" keyColumn="id" keyProperty="id" parameterType="map" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    insert into img_record_task
+    (imageId, `status`, play_url, create_time, update_time, end_time)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (#{item.imageid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER}, #{item.playUrl,jdbcType=VARCHAR}, 
+        #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.endTime,jdbcType=TIMESTAMP}
+        )
+    </foreach>
+  </insert>
+  <insert id="insertOrUpdate" keyColumn="id" keyProperty="id" parameterType="cn.mrxccc.easycv.domain.ImgRecordTask" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    insert into img_record_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      imageId,
+      `status`,
+      play_url,
+      create_time,
+      update_time,
+      end_time,
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      #{imageid,jdbcType=INTEGER},
+      #{status,jdbcType=INTEGER},
+      #{playUrl,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP},
+      #{endTime,jdbcType=TIMESTAMP},
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      imageId = #{imageid,jdbcType=INTEGER},
+      `status` = #{status,jdbcType=INTEGER},
+      play_url = #{playUrl,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+    </trim>
+  </insert>
+  <insert id="insertOrUpdateSelective" keyColumn="id" keyProperty="id" parameterType="cn.mrxccc.easycv.domain.ImgRecordTask" useGeneratedKeys="true">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    insert into img_record_task
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="imageid != null">
+        imageId,
+      </if>
+      <if test="status != null">
+        `status`,
+      </if>
+      <if test="playUrl != null">
+        play_url,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="imageid != null">
+        #{imageid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="playUrl != null">
+        #{playUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    on duplicate key update 
+    <trim suffixOverrides=",">
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="imageid != null">
+        imageId = #{imageid,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        `status` = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="playUrl != null">
+        play_url = #{playUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+</mapper>

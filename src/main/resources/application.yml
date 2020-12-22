@@ -48,6 +48,7 @@ record.maxsize: 10
 #record.dir:
 #录像播放地址（该地址应当为http/ftp服务访问地址，方便取用/播放录像）
 #play.url: http://localhost:81/
+easycv.rtsp.play-url: rtsp://10.199.1.210:554/
 #  packages-to-scan: cn.mrxccc.easycv.contrller
 logging:
   level:

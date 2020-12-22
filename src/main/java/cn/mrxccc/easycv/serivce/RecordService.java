@@ -1,6 +1,7 @@
 package cn.mrxccc.easycv.serivce;
 
 import cn.mrxccc.easycv.cache.RecordInfoStorage;
+import cn.mrxccc.easycv.domain.ImgRecordTask;
 import cn.mrxccc.easycv.entity.RecordInfo;
 import cn.mrxccc.easycv.entity.RecordTask;
 
@@ -13,8 +14,6 @@ import java.util.List;
  * @create 2020/12/16
  */
 public interface RecordService {
-
-    RecordTask recordImg(String src, String out) throws IOException, Exception;
 
     RecordTask record(String src, String out) throws IOException, Exception;
 
