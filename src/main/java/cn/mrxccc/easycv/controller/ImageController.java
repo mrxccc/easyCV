@@ -50,10 +50,13 @@ public class ImageController implements ImageApi {
 
 
     @Override
-    public ResponseResult<String> upload(MultipartFile file) {
+    public ResponseResult<String> upload(@RequestParam("file") MultipartFile file) {
+        if (file==null){
+            return new ResponseResult(-1, "文件为空", null);
+        }
         String filePath= myProperties.getImageDirPath();
         System.out.println(filePath);
-        String fileName = UUID.randomUUID() + file.getOriginalFilename();
+        String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
         log.info("转换后的文件名为：[{}]!!", fileName);
         File dest = new File(filePath + fileName);
         //判断父目录是否存在
