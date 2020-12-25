@@ -64,7 +64,7 @@ public interface Recorder {
      *
      * @return
      */
-    Recorder start();
+    void start();
 
     /**
      * 暂停录制

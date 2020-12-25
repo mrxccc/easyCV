@@ -56,7 +56,9 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+                            上传图片
+                        </button>
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
@@ -67,7 +69,6 @@
                                 <th>图片名称</th>
                                 <th>图片路径</th>
                                 <th>上传时间</th>
-                                <th>操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -76,22 +77,8 @@
                                 <td th:text="${img.imgName}"></td>
                                 <td th:text="${img.imgPath}"></td>
                                 <td th:text="${img.createTime}"></td>
-                                <td>
-                                    <button type="button" class="btn bg-gradient-primary btn-sm">
-                                        <i class="fas fa-play"></i> Play
-                                    </button>
-                                </td>
                             </tr>
                             </tbody>
-                            <tfoot>
-                            <tr>
-                                <th>图片id</th>
-                                <th>图片名称</th>
-                                <th>图片路径</th>
-                                <th>上传时间</th>
-                                <th>操作</th>
-                            </tr>
-                            </tfoot>
                         </table>
                     </div>
                     <!-- /.card-body -->
@@ -102,6 +89,47 @@
         <!-- /.row -->
     </div>
     <!-- /.container-fluid -->
+
+    <div class="modal fade" id="modal-default">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Default Modal</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="inputForm"  enctype="multipart/form-data" class="form-horizontal" action="/images/upload" method="post">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <input type="file" class="custom-file-input" id="exampleInputFile">
+                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                            </div>
+                            <!--<div class="form-group">
+                                <label for="exampleInputFile">File input</label>
+                                <div class="input-group">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="exampleInputFile">
+                                        <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">Upload</span>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                        <!-- /.card-body -->
+                        <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
 </section>
 <!-- /.content -->
 <!-- /.content-wrapper -->

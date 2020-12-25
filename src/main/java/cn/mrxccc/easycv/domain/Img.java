@@ -11,7 +11,7 @@ public class Img {
      * 主键id
      */
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(generator = "JDBC", strategy=GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
 

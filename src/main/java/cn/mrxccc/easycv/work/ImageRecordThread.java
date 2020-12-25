@@ -1,19 +1,27 @@
 package cn.mrxccc.easycv.work;
 
+import cn.mrxccc.easycv.domain.ImgRecordTask;
+import cn.mrxccc.easycv.mapper.ImgRecordTaskMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 /**
  * @author mrxccc
  * @create 2020/12/16
  */
 @Slf4j
-public class ImageRecordThread extends Thread {
+public class ImageRecordThread implements Runnable {
 
+    @Autowired
+    ImgRecordTaskMapper imgRecordTaskMapper;
+
+    private Integer taskId;
     /**
      * 开始状态
      */
@@ -38,15 +46,14 @@ public class ImageRecordThread extends Thread {
     protected int err_stop_num = 3;//默认错误数量达到三次终止录制
 
     /**
-     * @param name         -线程名称
      * @param grabber      -抓取器
      * @param record       -录制器
      * @param err_stop_num 允许的错误次数，超过该次数后即停止任务
      */
-    public ImageRecordThread(String name, FFmpegFrameGrabber grabber, FFmpegFrameRecorder record, Integer err_stop_num) {
-        super(name);
+    public ImageRecordThread(FFmpegFrameGrabber grabber, FFmpegFrameRecorder record, Integer err_stop_num, Integer taskId) {
         this.grabber = grabber;
         this.record = record;
+        this.taskId = taskId;
         if (err_stop_num != null) {
             this.err_stop_num = err_stop_num;
         }
@@ -132,7 +139,13 @@ public class ImageRecordThread extends Thread {
                 if (pkt == null) {
                     //超过三次则终止录制
                     if (err_index > err_stop_num) {
-                        log.info(getName() + "工作线程采集视频帧连续" + err_index + "次空包，本次任务终止");
+                        log.info(taskId + "工作线程采集视频帧连续" + err_index + "次空包，本次任务终止");
+                        ImgRecordTask imgRecordTask = new ImgRecordTask();
+                        imgRecordTask.setId(taskId);
+                        imgRecordTask.setStatus(-1);
+                        imgRecordTask.setUpdateTime(LocalDateTime.now());
+                        imgRecordTask.setEndTime(LocalDateTime.now());
+                        imgRecordTaskMapper.updateByPrimaryKeySelective(imgRecordTask);
                         break;
                     }
                     err_index++;
@@ -149,7 +162,7 @@ public class ImageRecordThread extends Thread {
         } finally {
             status = STOP_STATUS;
             stopRecord();
-            log.info(getName() + "工作线程的录像任务已结束，持续时长：" + (System.currentTimeMillis() - startime) / 1000 + "秒，共录制：" + frame_index + "帧，遇到的错误数：" + err_index + ",录制期间共暂停次数：" + pause_num);
+            log.info(taskId + "工作线程的录像任务已结束，持续时长：" + (System.currentTimeMillis() - startime) / 1000 + "秒，共录制：" + frame_index + "帧，遇到的错误数：" + err_index + ",录制期间共暂停次数：" + pause_num);
         }
     }
 
@@ -168,6 +181,7 @@ public class ImageRecordThread extends Thread {
             log.error("停止录制失败");
             log.error(e.getMessage(),e);
         }
+
     }
 
     /**

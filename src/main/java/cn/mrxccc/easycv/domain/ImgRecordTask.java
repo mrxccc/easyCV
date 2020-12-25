@@ -12,7 +12,7 @@ public class ImgRecordTask {
      */
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(generator = "JDBC", strategy=GenerationType.IDENTITY)
     private Integer id;
 
     /**

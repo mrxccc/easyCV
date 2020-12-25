@@ -50,7 +50,7 @@ public class ImageController implements ImageApi {
 
 
     @Override
-    public ResponseResult<String> upload(@RequestParam("file") MultipartFile file) {
+    public ResponseResult<String> upload(MultipartFile file) {
         String filePath= myProperties.getImageDirPath();
         System.out.println(filePath);
         String fileName = UUID.randomUUID() + file.getOriginalFilename();

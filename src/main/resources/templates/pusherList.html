@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>图片列表</title>
+    <th:block th:include="includes/head :: head"></th:block>
+    <!-- DataTables -->
+    <link rel="stylesheet" th:href="@{{adminlte}/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css(adminlte=${adminlte})}">
+    <link rel="stylesheet" th:href="@{{adminlte}/plugins/datatables-responsive/css/responsive.bootstrap4.min.css(adminlte=${adminlte})}">
+    <link rel="stylesheet" th:href="@{{adminlte}/plugins/datatables-buttons/css/buttons.bootstrap4.min.css(adminlte=${adminlte})}">
+</head>
+<body>
+<!-- Content Wrapper. Contains page content -->
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>DataTables</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li class="breadcrumb-item active">DataTables</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <!--<div class="card card-primary">
+                &lt;!&ndash; form start &ndash;&gt;
+                <form>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputFile">File input</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="exampleInputFile">
+                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+&lt;!&ndash;                                    <span class="input-group-text">Upload</span>&ndash;&gt;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    &lt;!&ndash; /.card-body &ndash;&gt;
+                </form>
+            </div>-->
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default">
+                            增加录像
+                        </button>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <table id="imageTable" class="table table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th>录像id</th>
+                                <th>录像状态</th>
+                                <th>播放地址</th>
+                                <th>图片名称</th>
+                                <th>创建时间</th>
+                                <th>更新时间</th>
+                                <th>录像停止时间</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="row : ${imgRecordTaskDtos}">
+                                <td th:text="${row.imgRecordTask.id}"></td>
+                                <td th:text="${row.imgRecordTask.status == 1? '正在录像':'已停止'}"></td>
+                                <td th:text="${row.imgRecordTask.playUrl}"></td>
+                                <td th:text="${row.img.imgName}"></td>
+                                <td th:text="${row.imgRecordTask.createTime}"></td>
+                                <td th:text="${row.imgRecordTask.updateTime}"></td>
+                                <td th:text="${row.imgRecordTask.endTime}"></td>
+                                <td>
+                                    <button type="button" th:if="${row.imgRecordTask.status  eq -1}" th:onclick="'javascript:play('+${row.imgRecordTask.id}+')'" class="btn bg-gradient-primary btn-sm">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                    <button type="button" th:if="${not (row.imgRecordTask.status  eq -1)}" th:onclick="'javascript:stop('+${row.imgRecordTask.id}+')'" class="btn bg-gradient-danger btn-sm">
+                                        <i class="fas fa-pause"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
+<div class="modal fade" id="modal-default">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Default Modal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="inputForm" class="form-horizontal" action="/imgRecord/addImgRecord" method="post" th:object="${imageId}">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">图片id</label>
+                            <input type="text" name="imageId" class="form-control" id="exampleInputEmail1" placeholder="图片id">
+                        </div>
+                        <!--<div class="form-group">
+                            <label for="exampleInputFile">File input</label>
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" id="exampleInputFile">
+                                    <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                </div>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Upload</span>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                    <!-- /.card-body -->
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+<!-- /.modal -->
+<!-- /.modal -->
+<!-- /.content -->
+<!-- /.content-wrapper -->
+<!-- bs-custom-file-input -->
+<th:block th:include="includes/foot :: foot"></th:block>
+<script th:src="@{{adminlte}/plugins/bs-custom-file-input/bs-custom-file-input.min.js(adminlte=${adminlte})}"></script>
+<script>
+    $(function () {
+        bsCustomFileInput.init();
+    });
+
+    function play(taskId) {
+        var url = '/imgRecord/startImgRecordTask?taskId='+ taskId;
+        $.ajax({
+            url: url,
+            type: "post",
+            success: function (data) {
+                console.log(data)
+                if (data.status == 0){
+                    alert("执行成功")
+                } else {
+                    alert("执行失败")
+                }
+                window.location.href="/imgRecord/list";
+            }
+        });
+    }
+
+    function stop(taskId) {
+        var url = '/imgRecord/stopImgRecordTask?taskId='+ taskId;
+        $.ajax({
+            url: url,
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                console.log(data)
+                if (data.status != -1){
+                    alert("执行成功")
+                } else {
+                    alert("执行失败")
+                }
+                window.location.href="/imgRecord/list";
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

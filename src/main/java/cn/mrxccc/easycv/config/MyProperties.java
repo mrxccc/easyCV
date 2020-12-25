@@ -21,8 +21,15 @@ public class MyProperties implements ApplicationContextAware {
         return rtspPlayUrl;
     }
 
+    public String getEasyDarwinUrl() {
+        return easyDarwinUrl;
+    }
+
     @Value("${easycv.rtsp.play-url}")
     private String rtspPlayUrl;
+
+    @Value("${easycv.easy-darwin.url}")
+    private String easyDarwinUrl;
 
     public String getImageDirPath() {
         return imageDirPath;

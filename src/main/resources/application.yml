@@ -21,7 +21,7 @@ spring:
       connection-test-query: SELECT 1
   thymeleaf:
     cache: false # 开发时关闭缓存,不然没法看到实时页面
-    mode: HTML5 # 用非严格的 HTML
+    mode: HTML # 用非严格的 HTML
     encoding: UTF-8
     prefix: classpath:/templates/
     suffix: .html
@@ -48,8 +48,23 @@ record.maxsize: 10
 #record.dir:
 #录像播放地址（该地址应当为http/ftp服务访问地址，方便取用/播放录像）
 #play.url: http://localhost:81/
-easycv.rtsp.play-url: rtsp://10.199.1.210:554/
+easycv:
+  easy-darwin:
+    url: http://localhost:10008/api/v1/
+  rtsp.play-url: rtsp://localhost:554/
 #  packages-to-scan: cn.mrxccc.easycv.contrller
 logging:
   level:
     cn.mrxccc.easycv: debug
+
+# 异步线程配置
+# 核心线程数
+async:
+  executor:
+    thread:
+      name:
+        prefix: image-record-   # 线程池中线程的名称前缀
+      core_pool_size: 5  # 核心线程数
+      max_pool_size: 50     # 最大线程数
+      queue_capacity: 50  # 任务队列大小
+      keep_alive_seconds: 100   # 缓冲队列中线程的空闲时间
