@@ -33,7 +33,7 @@ public class ImageRecordController {
      *
      * @return
      */
-    @Operation(summary = "开始图片录像", tags = "录制管理")
+    @Operation(summary = "添加图片录像", tags = "录制管理")
     @PostMapping("/addImgRecord")
     public String addImgRecord(@RequestParam Integer imageId) {
         Integer taskId = 0;

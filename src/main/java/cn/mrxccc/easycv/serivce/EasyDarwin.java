@@ -28,7 +28,7 @@ public class EasyDarwin {
      *
      * @return
      */
-    public EasyDarwinPushers getpPushers(PushersQuery pushersQuery) {
+    public EasyDarwinPushers getPushers(PushersQuery pushersQuery) {
         ResponseEntity<EasyDarwinPushers> forEntity = restTemplate.getForEntity(myProperties.getEasyDarwinUrl() + "pushers", EasyDarwinPushers.class, pushersQuery);
         if (forEntity.getStatusCode() == HttpStatus.OK) {
             return forEntity.getBody();

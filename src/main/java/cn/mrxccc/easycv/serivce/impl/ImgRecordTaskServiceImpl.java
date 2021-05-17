@@ -90,7 +90,7 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
     public boolean stopImgRecordTask(Integer taskId) {
         ImageRecord recorderTask = tasksManager.getRecorderTask(taskId);
         boolean isStop = tasksManager.stop(recorderTask);
-        if (isStop){
+        if (recorderTask == null || isStop){
             updateStatusByTaskId(taskId, -1);
         }
         return isStop;
@@ -112,18 +112,19 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
             log.info("数据库中图片不存在");
             return null;
         }
-        String playUrl = myProperties.getRtspPlayUrl() + img.getImgName().split(".")[0];
+        String playUrl = myProperties.getRtspPlayUrl() + img.getImgName().split("\\.")[0];
         ImgRecordTask imgRecordTask = null;
         try {
             imgRecordTask = imgRecordTaskMapper.selectByPrimaryKey(imageId);
             if (imgRecordTask == null) {
                 imgRecordTask = new ImgRecordTask();
-                imgRecordTask.setImageid(imageId);
+                imgRecordTask.setImageId(imageId);
                 imgRecordTask.setPlayUrl(playUrl);
                 imgRecordTask.setStatus(-1);
                 imgRecordTask.setCreateTime(LocalDateTime.now());
                 imgRecordTask.setUpdateTime(LocalDateTime.now());
                 imgRecordTaskMapper.insert(imgRecordTask);
+                return imgRecordTask;
             }
             // 开启录像
             ImageRecord recorder = tasksManager.createRecorder(img.getImgPath(), imgRecordTask.getPlayUrl(), imgRecordTask.getId());
@@ -147,7 +148,7 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
             if (recorderTask == null){
                 ImgRecordTask imgRecordTask = imgRecordTaskMapper.selectByPrimaryKey(taskId);
                 if (imgRecordTask != null){
-                    Img img = imgMapper.selectByPrimaryKey(imgRecordTask.getImageid());
+                    Img img = imgMapper.selectByPrimaryKey(imgRecordTask.getImageId());
                     recorderTask = tasksManager.createRecorder(img.getImgPath(), imgRecordTask.getPlayUrl(), imgRecordTask.getId());
                 }
             }

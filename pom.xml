@@ -220,9 +220,9 @@
         <!--                <sonar.jdbc.username>user</sonar.jdbc.username>-->
         <!--                <sonar.jdbc.password>password</sonar.jdbc.password>-->
         <!--                <sonar.login>admin</sonar.login>-->
-        <sonar.sonar.projectKey>easycv</sonar.sonar.projectKey>
-        <sonar.host.url>http://10.199.1.210:59000</sonar.host.url>
-        <sonar.login>2fcb355064b7e85703fefde208d91a6eabc529c2</sonar.login>
+        <sonar.projectKey>easycv</sonar.projectKey>
+        <sonar.host.url>http://10.199.1.193:9000</sonar.host.url>
+        <sonar.login>ba2ab7fa77de5c16a8c374e36d707e59f4ff9181</sonar.login>
       </properties>
     </profile>
   </profiles>

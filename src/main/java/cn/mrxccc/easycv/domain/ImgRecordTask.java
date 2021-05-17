@@ -18,8 +18,8 @@ public class ImgRecordTask {
     /**
      * 图片id
      */
-    @Column(name = "imageId")
-    private Integer imageid;
+    @Column(name = "image_id")
+    private Integer imageId;
 
     /**
      * 执行状态

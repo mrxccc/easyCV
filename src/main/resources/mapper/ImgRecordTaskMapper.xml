@@ -5,7 +5,7 @@
     <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
     <!--@Table img_record_task-->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="imageId" jdbcType="INTEGER" property="imageid" />
+    <result column="image_id" jdbcType="INTEGER" property="imageId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="play_url" jdbcType="VARCHAR" property="playUrl" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -16,7 +16,7 @@
     <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
     <!--@Table img_record_task-->
     <result column="rt.id" jdbcType="INTEGER" property="imgRecordTask.id" />
-    <result column="rt.imageId" jdbcType="INTEGER" property="imgRecordTask.imageid" />
+    <result column="rt.image_id" jdbcType="INTEGER" property="imgRecordTask.imageId" />
     <result column="rt.status" jdbcType="INTEGER" property="imgRecordTask.status" />
     <result column="rt.play_url" jdbcType="VARCHAR" property="imgRecordTask.playUrl" />
     <result column="rt.create_time" jdbcType="TIMESTAMP" property="imgRecordTask.createTime" />
@@ -31,7 +31,7 @@
   </resultMap>
   <sql id="Img_Record_Map_List">
     <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
-    rt.id as 'rt.id', rt.imageId as 'rt.imageId', rt.`status` as 'rt.status', rt.play_url as 'rt.play_url', rt.create_time as 'rt.create_time', rt.update_time as 'rt.update_time', rt.end_time as 'rt.end_time',
+    rt.id as 'rt.id', rt.image_id as 'rt.imageId', rt.`status` as 'rt.status', rt.play_url as 'rt.play_url', rt.create_time as 'rt.create_time', rt.update_time as 'rt.update_time', rt.end_time as 'rt.end_time',
     img.id as 'img.id', img.img_name as 'img.img_name', img.img_path as 'img.img_path', img.create_time as 'img.create_time', img.update_time as 'img.update_time'
   </sql>
   <sql id="Img_Record_List">
@@ -44,7 +44,7 @@
     <trim prefix="set" suffixOverrides=",">
       <trim prefix="imageId = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          when id = #{item.id,jdbcType=INTEGER} then #{item.imageid,jdbcType=INTEGER}
+          when id = #{item.id,jdbcType=INTEGER} then #{item.imageId,jdbcType=INTEGER}
         </foreach>
       </trim>
       <trim prefix="`status` = case" suffix="end,">
@@ -84,8 +84,8 @@
     <trim prefix="set" suffixOverrides=",">
       <trim prefix="imageId = case" suffix="end,">
         <foreach collection="list" index="index" item="item">
-          <if test="item.imageid != null">
-            when id = #{item.id,jdbcType=INTEGER} then #{item.imageid,jdbcType=INTEGER}
+          <if test="item.imageId != null">
+            when id = #{item.id,jdbcType=INTEGER} then #{item.imageId,jdbcType=INTEGER}
           </if>
         </foreach>
       </trim>
@@ -136,7 +136,7 @@
     (imageId, `status`, play_url, create_time, update_time, end_time)
     values
     <foreach collection="list" item="item" separator=",">
-      (#{item.imageid,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER}, #{item.playUrl,jdbcType=VARCHAR}, 
+      (#{item.imageId,jdbcType=INTEGER}, #{item.status,jdbcType=INTEGER}, #{item.playUrl,jdbcType=VARCHAR},
         #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP}, #{item.endTime,jdbcType=TIMESTAMP}
         )
     </foreach>
@@ -160,7 +160,7 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      #{imageid,jdbcType=INTEGER},
+      #{imageId,jdbcType=INTEGER},
       #{status,jdbcType=INTEGER},
       #{playUrl,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP},
@@ -172,7 +172,7 @@
       <if test="id != null">
         id = #{id,jdbcType=INTEGER},
       </if>
-      imageId = #{imageid,jdbcType=INTEGER},
+      imageId = #{imageId,jdbcType=INTEGER},
       `status` = #{status,jdbcType=INTEGER},
       play_url = #{playUrl,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -187,7 +187,7 @@
       <if test="id != null">
         id,
       </if>
-      <if test="imageid != null">
+      <if test="imageId != null">
         imageId,
       </if>
       <if test="status != null">
@@ -211,8 +211,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="imageid != null">
-        #{imageid,jdbcType=INTEGER},
+      <if test="imageId != null">
+        #{imageId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -235,8 +235,8 @@
       <if test="id != null">
         id = #{id,jdbcType=INTEGER},
       </if>
-      <if test="imageid != null">
-        imageId = #{imageid,jdbcType=INTEGER},
+      <if test="imageId != null">
+        imageId = #{imageId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         `status` = #{status,jdbcType=INTEGER},
@@ -258,6 +258,6 @@
 
   <select id="selectImgRecordTask" resultMap="ImgRecordMap">
     select <include refid="Img_Record_Map_List"/>
-    from img_record_task rt left join img as img on rt.imageId = img.id
+    from img_record_task rt left join img as img on rt.image_id = img.id
   </select>
 </mapper>

@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Configuration
 public class ContantsInterceptor implements HandlerInterceptor {
-    private static final String HOST_CDN = "http://10.199.1.210/AdminLTE-3.1.0-rc/";
+    private static final String HOST_CDN = "http://123.56.158.85/cdn/AdminLTE-3.1.0-rc/";
 
     private static final String TEMPLATE_ADMIN_LET = "adminlte/v2.4.3";
 
