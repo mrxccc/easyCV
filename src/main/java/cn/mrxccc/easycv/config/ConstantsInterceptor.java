@@ -1,5 +1,8 @@
 package cn.mrxccc.easycv.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,12 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  * @create 2020/12/18
  */
 @Configuration
-public class ContantsInterceptor implements HandlerInterceptor {
-    private static final String HOST_CDN = "http://123.56.158.85/cdn/AdminLTE-3.1.0-rc/";
-
-    private static final String TEMPLATE_ADMIN_LET = "adminlte/v2.4.3";
-
-    private static final String ADMIN_LET_PATH = "/static/AdminLTE-2.4.3";
+public class ConstantsInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -27,7 +25,7 @@ public class ContantsInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         if (modelAndView != null) {
-            modelAndView.addObject("adminlte", HOST_CDN );
+            modelAndView.addObject("adminlte", SpringContextUtil.getBean(ConfigurableVariablesHolder.class).getCdnUrl());
         }
     }
 

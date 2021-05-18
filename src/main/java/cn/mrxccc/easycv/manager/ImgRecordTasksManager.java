@@ -51,7 +51,7 @@ public class ImgRecordTasksManager implements TasksManager {
     @Override
     public synchronized ImageRecord createRecorder(String imgPath, String rtspPalyPath, Integer taskId) throws Exception {
         log.debug("创建时，当前池数量：" + taskExecutor.getPoolSize() + ",空闲数量：" + (taskExecutor.getPoolSize() - taskExecutor.getActiveCount()) + ",工作数量：" + taskExecutor.getActiveCount());
-        ImageRecord recorder = new ImageRecord(imgPath, rtspPalyPath, 0, 0, imgCodec, 25, 25 * 2, 0, avutil.AV_PIX_FMT_NONE);
+        ImageRecord recorder = new ImageRecord(imgPath, rtspPalyPath, 0, 0, imgCodec, 25, 25 * 2, 0, avutil.AV_PIX_FMT_YUV420P);
         recorder.setImgRecordTaskService(imgRecordTaskService);
         recorder.from(imgPath).to(rtspPalyPath);
         recorder.setTaskId(taskId);

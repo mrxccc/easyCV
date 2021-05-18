@@ -46,8 +46,8 @@ mybatis:
 record.maxsize: 10
 easycv:
   easy-darwin:
-    url: http://localhost:10008/api/v1/
-  rtsp.play-url: rtsp://localhost:554/
+    url: http://${EASY_DARWIN_IP:127.0.0.1}:10008/api/v1/
+  rtsp.play-url: rtsp://${EASY_DARWIN_RTSP_URL:127.0.0.1}:${EASY_DARWIN_RTSP_PORT:554}/
   cdn-url: http://123.56.158.85/cdn/AdminLTE-3.1.0-rc/
 
 logging:

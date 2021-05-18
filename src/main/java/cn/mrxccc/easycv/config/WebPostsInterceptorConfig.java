@@ -1,7 +1,6 @@
 package cn.mrxccc.easycv.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,7 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebPostsInterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ContantsInterceptor()).addPathPatterns("/**").excludePathPatterns("/static");
+        registry.addInterceptor(new ConstantsInterceptor()).addPathPatterns("/**").excludePathPatterns("/static");
     }
 
     @Override

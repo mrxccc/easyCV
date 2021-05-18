@@ -81,6 +81,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="img : ${imageList}">
+                                <td th:text="${img.id}"></td>
                                 <td th:text="${img.imgName}"></td>
                                 <td th:text="${img.imgPath}"></td>
                                 <td th:text="${img.createTime}"></td>

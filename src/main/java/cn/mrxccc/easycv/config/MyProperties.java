@@ -1,5 +1,6 @@
 package cn.mrxccc.easycv.config;
 
+import lombok.Data;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -14,30 +15,15 @@ import java.io.File;
  * @create 2020/12/18
  */
 @Component
+@Data
 public class MyProperties implements ApplicationContextAware {
     private String imageDirPath;
-
-    public String getRtspPlayUrl() {
-        return rtspPlayUrl;
-    }
-
-    public String getEasyDarwinUrl() {
-        return easyDarwinUrl;
-    }
 
     @Value("${easycv.rtsp.play-url}")
     private String rtspPlayUrl;
 
     @Value("${easycv.easy-darwin.url}")
     private String easyDarwinUrl;
-
-    public String getImageDirPath() {
-        return imageDirPath;
-    }
-
-    private void setImageDirPath(String imageDirPath) {
-        this.imageDirPath = imageDirPath;
-    }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
