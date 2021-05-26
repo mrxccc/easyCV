@@ -1,12 +1,8 @@
 package cn.mrxccc.easycv.manager;
 
-import cn.mrxccc.easycv.entity.RecordTask;
 import cn.mrxccc.easycv.mapper.ImgRecordTaskMapper;
 import cn.mrxccc.easycv.recorder.ImageRecord;
-import cn.mrxccc.easycv.recorder.JavaCVRecord;
-import cn.mrxccc.easycv.recorder.Recorder;
 import cn.mrxccc.easycv.serivce.ImgRecordTaskService;
-import com.sun.org.apache.regexp.internal.RE;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
@@ -16,10 +12,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -35,7 +29,6 @@ public class ImgRecordTasksManager implements TasksManager {
     public static final int PAUSE_STATUS = -1;
     public static final int STOP_STATUS = 2;
 
-    private int imgCodec = avcodec.AV_CODEC_ID_JPEG2000;
     @Autowired
     ImgRecordTaskMapper imgRecordTaskMapper;
 
@@ -51,7 +44,8 @@ public class ImgRecordTasksManager implements TasksManager {
     @Override
     public synchronized ImageRecord createRecorder(String imgPath, String rtspPalyPath, Integer taskId) throws Exception {
         log.debug("创建时，当前池数量：" + taskExecutor.getPoolSize() + ",空闲数量：" + (taskExecutor.getPoolSize() - taskExecutor.getActiveCount()) + ",工作数量：" + taskExecutor.getActiveCount());
-        ImageRecord recorder = new ImageRecord(imgPath, rtspPalyPath, 0, 0, imgCodec, 25, 25 * 2, 0, avutil.AV_PIX_FMT_YUV420P);
+//        ImageRecord recorder = new ImageRecord();
+        ImageRecord recorder = new ImageRecord(imgPath, rtspPalyPath, avutil.AV_PIX_FMT_YUV420P);
         recorder.setImgRecordTaskService(imgRecordTaskService);
         recorder.from(imgPath).to(rtspPalyPath);
         recorder.setTaskId(taskId);

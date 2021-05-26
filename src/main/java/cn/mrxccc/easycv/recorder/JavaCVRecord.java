@@ -25,13 +25,13 @@ public abstract class JavaCVRecord{
     String out;
     // 视频参数
     // 转换视频宽度，不设置不会改变视频源宽度，设置后会进行转换
-    int width = -1;
+    Integer width = -1;
     // 转换视频高度，不设置不会改变视频源高度，设置后会进行转换
-    int height = -1;
+    Integer height = -1;
     // 视频编码，使用avcodec中的编码常量，例如：avcodec.AV_CODEC_ID_JPEG2000
     int videoCodec;
     // 帧率
-    double framerate;
+    Double framerate;
     // 比特率
     int bitrate;
     // 缩放

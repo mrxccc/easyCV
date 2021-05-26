@@ -1,9 +1,12 @@
 package cn.mrxccc.easycv.recorder;
 
 import cn.mrxccc.easycv.serivce.ImgRecordTaskService;
+import com.sun.org.apache.regexp.internal.RE;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.ffmpeg.avformat.AVFormatContext;
 import org.bytedeco.ffmpeg.global.avcodec;
+import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.Frame;
@@ -18,6 +21,7 @@ import java.util.Date;
  * @create 2020/12/16
  */
 @Slf4j
+@Data
 public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
 
     ImgRecordTaskService imgRecordTaskService;
@@ -52,14 +56,6 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
      */
     public static final int STOP_STATUS = -1;
 
-    public Integer getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Integer taskId) {
-        this.taskId = taskId;
-    }
-
     public ImgRecordTaskService getImgRecordTaskService() {
         return imgRecordTaskService;
     }
@@ -68,55 +64,11 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         this.imgRecordTaskService = imgRecordTaskService;
     }
 
-    public Integer getErr_stop_num() {
-        return err_stop_num;
-    }
+    public ImageRecord(){}
 
-    public void setErr_stop_num(Integer err_stop_num) {
-        this.err_stop_num = err_stop_num;
-    }
-
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getPause() {
-        return pause;
-    }
-
-    public void setPause(int pause) {
-        this.pause = pause;
-    }
-
-    public ImageRecord(String src, String out, int width, int height, int videoCodec, double framerate, int bitrate, int imageScalingFlags, int pixelFormat) {
+    public ImageRecord(String src, String out, int pixelFormat) {
         this.src = src;
         this.out = out;
-        this.width = width;
-        this.height = height;
-        this.videoCodec = videoCodec;
-        this.framerate = framerate;
-        this.bitrate = bitrate;
-        this.imageScalingFlags = imageScalingFlags;
         this.pixelFormat = pixelFormat;
     }
 
@@ -132,13 +84,9 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         if (hasRTSP(src)) {
             grabber.setOption("rtsp_transport", "tcp");
         }
-        //如果不触发SwsContext像素格式转换，pixelFormat、width、height和imageScalingFlags参数不会起效果，
-        grabber.setImageWidth(width);
-        grabber.setImageHeight(height);
-        grabber.setImageScalingFlags(imageScalingFlags);
-        grabber.setPixelFormat(pixelFormat);//使用avutil中的像素格式常量，例如：avutil.AV_PIX_FMT_NONE
-        grabber.setVideoCodec(videoCodec);//使用avcodec中的编码常量，例如：avcodec.AV_CODEC_ID_NONE
+
         grabber.start();
+
         return this;
     }
 
@@ -151,16 +99,10 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         // 录制/推流器
         record = new FFmpegFrameRecorder(out, grabber.getImageWidth(), grabber.getImageHeight(), 0);
         record.setOption("rtsp_transport", "tcp");
-        record.setVideoCodecName(null);//优先级高于videoCodec
+        record.setVideoCodec(avcodec.AV_CODEC_ID_H264);
         record.setPixelFormat(pixelFormat);// 只有pixelFormat，width，height三个参数任意一个不为空才会进行像素格式转换
-        record.setImageScalingFlags(imageScalingFlags);
         // 关键帧间隔
-        record.setGopSize((int) (framerate * 2));
-        record.setFrameRate(framerate);
-        record.setVideoBitrate(-1);
-        record.setVideoQuality(-1);
         AVFormatContext fc = null;
-        record.setVideoCodec(avcodec.AV_CODEC_ID_NONE);
         //rtmp、rtsp和flv
         if (hasRTMPFLV(out)) {
             // 封装格式flv，并使用h264和aac编码
@@ -188,16 +130,8 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
     }
 
     @Override
-    public Recorder videoParam(Integer width, Integer height, int framerate, int bitrate) {
-        if (width != null) {
-            this.width = width;
-        }
-        if (height != null) {
-            this.height = height;
-        }
-        this.framerate = framerate;
-        this.bitrate = bitrate;
-        return this;
+    public Recorder videoParam(Integer width, Integer height, Double framerate, int bitrate) {
+        return null;
     }
 
     @Override
@@ -213,7 +147,6 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         //采集或推流失败次数
         long err_index = 0;
         try {
-            imgRecordTaskService.updateStatusByTaskId(taskId, 1);
             // 由于图片只有一帧，重复调用grab自然会抛出异常，所以只调用一次
             Frame pkt = grabber.grabImage();
             for (; status == START_STATUS ;) {

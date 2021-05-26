@@ -57,7 +57,7 @@ public interface Recorder {
      * @param bitrate
      * @return
      */
-    Recorder videoParam(Integer width, Integer height, int framerate, int bitrate);
+    Recorder videoParam(Integer width, Integer height, Double framerate, int bitrate);
 
     /**
      * 开始录制
