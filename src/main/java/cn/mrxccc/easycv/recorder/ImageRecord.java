@@ -16,6 +16,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 
+import static org.bytedeco.ffmpeg.global.avutil.AV_LOG_ERROR;
+import static org.bytedeco.ffmpeg.global.avutil.av_log_set_level;
+
 /**
  * @author mrxccc
  * @create 2020/12/16
@@ -66,25 +69,25 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
 
     public ImageRecord(){}
 
-    public ImageRecord(String src, String out, int pixelFormat) {
+    public ImageRecord(String src, String out, int videoCodec) {
         this.src = src;
         this.out = out;
-        this.pixelFormat = pixelFormat;
+        this.videoCodec = videoCodec;
     }
 
     @Override
     public Recorder from(String src) throws FrameGrabber.Exception {
-//        av_log_set_level(AV_LOG_ERROR);
+        av_log_set_level(AV_LOG_ERROR);
         if (src == null) {
             throw new FrameGrabber.Exception("源视频不能为空");
         }
         this.src = src;
         // 采集/抓取器
         grabber = new FFmpegFrameGrabber(src);
-        if (hasRTSP(src)) {
-            grabber.setOption("rtsp_transport", "tcp");
-        }
-
+//        if (hasRTSP(src)) {
+//            grabber.setOption("rtsp_transport", "tcp");
+//        }
+        grabber.setFormat("image2");
         grabber.start();
 
         return this;
@@ -99,22 +102,14 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         // 录制/推流器
         record = new FFmpegFrameRecorder(out, grabber.getImageWidth(), grabber.getImageHeight(), 0);
         record.setOption("rtsp_transport", "tcp");
-        record.setVideoCodec(avcodec.AV_CODEC_ID_H264);
-        record.setPixelFormat(pixelFormat);// 只有pixelFormat，width，height三个参数任意一个不为空才会进行像素格式转换
-        // 关键帧间隔
-        AVFormatContext fc = null;
-        //rtmp、rtsp和flv
-        if (hasRTMPFLV(out)) {
-            // 封装格式flv，并使用h264和aac编码
-            record.setFormat("flv");
-            if (hasRTMPFLV(src)) {
-                fc = grabber.getFormatContext();
-            }
-        } else if (hasMP4(out)) {//MP4
-            record.setFormat("mp4");
-        } else if (hasRTSP(out)) {
-            record.setFormat("rtsp");
-        }
+        //编码格式
+//        record.setVideoCodec(videoCodec);
+        record.setVideoCodecName("libx264");
+//        record.setFormat("rtsp");
+        record.setImageHeight(1920);
+        record.setImageHeight(1080);
+        record.setFrameRate(25);
+        record.setGopSize(25);
         record.start();
         return this;
     }
