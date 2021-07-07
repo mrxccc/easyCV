@@ -144,6 +144,19 @@
   </dependencyManagement>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/java</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.xml</include>
+          <include>**/Dockerfile</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -153,6 +166,16 @@
           <fork>true</fork>
           <addResources>true</addResources>
         </configuration>
+        <executions>
+          <execution>
+            <configuration>
+              <classifier>exec</classifier>
+            </configuration>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>

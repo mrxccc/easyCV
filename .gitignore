@@ -35,3 +35,10 @@ logs/*
 /.nb-gradle/
 build/
 src/main/resources/static/
+
+!**/src/main/webapp/node_modules/**
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

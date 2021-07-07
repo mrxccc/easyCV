@@ -84,10 +84,8 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         this.src = src;
         // 采集/抓取器
         grabber = new FFmpegFrameGrabber(src);
-//        if (hasRTSP(src)) {
-//            grabber.setOption("rtsp_transport", "tcp");
-//        }
-        grabber.setFormat("image2");
+        grabber.setFrameRate(30);
+        grabber.setVideoBitrate(3000000);
         grabber.start();
 
         return this;
@@ -103,13 +101,9 @@ public class ImageRecord extends JavaCVRecord implements Recorder,Runnable {
         record = new FFmpegFrameRecorder(out, grabber.getImageWidth(), grabber.getImageHeight(), 0);
         record.setOption("rtsp_transport", "tcp");
         //编码格式
-//        record.setVideoCodec(videoCodec);
         record.setVideoCodecName("libx264");
-//        record.setFormat("rtsp");
-        record.setImageHeight(1920);
-        record.setImageHeight(1080);
-        record.setFrameRate(25);
-        record.setGopSize(25);
+        record.setFrameRate(30);
+        record.setVideoBitrate(3000000);
         record.start();
         return this;
     }

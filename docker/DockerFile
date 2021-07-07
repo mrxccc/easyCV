@@ -1,0 +1,8 @@
+FROM adoptopenjdk/openjdk8:alpine-slim
+ENV TZ Asia/Shanghai
+ENV BASE_PATH='/opt' \
+    PRO_PATH='/opt/project'
+WORKDIR $PRO_PATH
+ADD target/easyCV-1.0.0-SNAPSHOT-exec.jar $PRO_PATH
+
+ENTRYPOINT ["java","-jar","easyCV-1.0.0-SNAPSHOT-exec.jar"]
