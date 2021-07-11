@@ -14,6 +14,31 @@
     <!--@mbg.generated generated on Tue Dec 15 18:38:34 CST 2020.-->
     id, img_name, img_path, create_time, update_time
   </sql>
+
+  <resultMap id="ImgRecordMap" type="cn.mrxccc.easycv.dto.ImgRecordTaskDto">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    <!--@Table img_record_task-->
+    <result column="rt.id" jdbcType="INTEGER" property="imgRecordTask.id" />
+    <result column="rt.image_id" jdbcType="INTEGER" property="imgRecordTask.imageId" />
+    <result column="rt.status" jdbcType="INTEGER" property="imgRecordTask.status" />
+    <result column="rt.play_url" jdbcType="VARCHAR" property="imgRecordTask.playUrl" />
+    <result column="rt.create_time" jdbcType="TIMESTAMP" property="imgRecordTask.createTime" />
+    <result column="rt.update_time" jdbcType="TIMESTAMP" property="imgRecordTask.updateTime" />
+    <result column="rt.end_time" jdbcType="TIMESTAMP" property="imgRecordTask.endTime" />
+
+    <result column="img.id" jdbcType="INTEGER" property="img.id" />
+    <result column="img.img_name" jdbcType="VARCHAR" property="img.imgName" />
+    <result column="img.img_path" jdbcType="VARCHAR" property="img.imgPath" />
+    <result column="img.create_time" jdbcType="TIMESTAMP" property="img.createTime" />
+    <result column="img.update_time" jdbcType="TIMESTAMP" property="img.updateTime" />
+  </resultMap>
+
+  <sql id="Img_Record_Map_List">
+    <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
+    rt.id as 'rt.id', rt.image_id as 'rt.imageId', rt.`status` as 'rt.status', rt.play_url as 'rt.play_url', rt.create_time as 'rt.create_time', rt.update_time as 'rt.update_time', rt.end_time as 'rt.end_time',
+    img.id as 'img.id', img.img_name as 'img.img_name', img.img_path as 'img.img_path', img.create_time as 'img.create_time', img.update_time as 'img.update_time'
+  </sql>
+
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated generated on Tue Dec 15 18:38:34 CST 2020.-->
     update img
@@ -82,6 +107,7 @@
       #{item.id,jdbcType=INTEGER}
     </foreach>
   </update>
+
   <insert id="batchInsert" parameterType="map">
     <!--@mbg.generated generated on Tue Dec 15 18:38:34 CST 2020.-->
     insert into img
@@ -163,4 +189,12 @@
       </if>
     </trim>
   </insert>
+
+  <select id="countTaskByImageId" resultType="java.lang.Integer">
+    select count(id) from img_record_task where image_id = #{imageId}
+  </select>
+  <select id="selectImgRecordTask" resultMap="ImgRecordMap">
+    select <include refid="Img_Record_Map_List"/>
+    from img left join img_record_task as rt on rt.image_id = img.id
+  </select>
 </mapper>

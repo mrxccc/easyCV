@@ -2,6 +2,7 @@ package cn.mrxccc.easycv.serivce;
 
 import java.util.List;
 import cn.mrxccc.easycv.domain.Img;
+import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 
 public interface ImgService{
 
@@ -16,4 +17,10 @@ public interface ImgService{
     int insertOrUpdateSelective(Img record);
 
     List<Img> selectAll();
+
+    Integer hasTask(String imageId);
+
+    List<ImgRecordTaskDto> selectImgRecordTask();
+
+
 }

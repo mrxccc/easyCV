@@ -1,5 +1,6 @@
 package cn.mrxccc.easycv.serivce.impl;
 
+import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -43,5 +44,16 @@ public class ImgServiceImpl implements ImgService{
     public List<Img> selectAll() {
         return imgMapper.selectAll();
     }
+
+    @Override
+    public Integer hasTask(String imageId) {
+        return imgMapper.countTaskByImageId(imageId);
+    }
+
+    @Override
+    public List<ImgRecordTaskDto> selectImgRecordTask() {
+        return imgMapper.selectImgRecordTask();
+    }
+
 
 }

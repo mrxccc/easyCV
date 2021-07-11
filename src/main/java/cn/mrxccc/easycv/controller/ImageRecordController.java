@@ -1,5 +1,8 @@
 package cn.mrxccc.easycv.controller;
 
+import cn.mrxccc.easycv.api.RecordApi;
+import cn.mrxccc.easycv.domain.ImgRecordTask;
+import cn.mrxccc.easycv.domain.ResponseCodeEnum;
 import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.serivce.EasyDarwin;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,9 +23,8 @@ import java.util.List;
  * @create 2020/12/21
  */
 @Controller
-@RequestMapping("/imgRecord")
 @Slf4j
-public class ImageRecordController {
+public class ImageRecordController implements RecordApi {
     @Autowired
     ImgRecordTaskService imgRecordTaskService;
 
@@ -33,19 +36,15 @@ public class ImageRecordController {
      *
      * @return
      */
-    @Operation(summary = "添加图片录像", tags = "录制管理")
-    @PostMapping("/addImgRecord")
-    public String addImgRecord(@RequestParam Integer imageId) {
-        Integer taskId = 0;
+    @Override
+    public ResponseResult<String> addImgRecord(@RequestParam Integer imageId) {
         try {
             imgRecordTaskService.recordImgByImgId(imageId);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            if (taskId != 0) {
-                imgRecordTaskService.stopByTaskId(taskId);
-            }
+            return new ResponseResult<>(ResponseCodeEnum.FAILED.getCode(),"failed");
         }
-        return "redirect:/imgRecord/list";
+        return new ResponseResult<>(ResponseCodeEnum.SUCCESS.getCode(),"success");
     }
 
     /**
@@ -53,17 +52,14 @@ public class ImageRecordController {
      *
      * @return
      */
-    @Operation(summary = "图片录像列表", tags = "录制管理")
-    @GetMapping("/list")
-    public String EasyDarwinPushers(Model model) {
+    @Override
+    public ResponseResult<List<ImgRecordTaskDto>> list() {
         try {
-            List<ImgRecordTaskDto> imgRecordTaskDtos = imgRecordTaskService.selectImgRecordTask();
-            model.addAttribute("imgRecordTaskDtos", imgRecordTaskDtos);
-            return "pusherList";
+            return new ResponseResult<>(ResponseCodeEnum.SUCCESS.getCode(), imgRecordTaskService.selectImgRecordTask());
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return "pusherList";
+        return new ResponseResult<List<ImgRecordTaskDto>>(ResponseCodeEnum.FAILED.getCode(), new ArrayList<>());
     }
 
     /**
@@ -71,25 +67,23 @@ public class ImageRecordController {
      *
      * @return
      */
-    @Operation(summary = "开始图片录像", tags = "录制管理")
-    @ResponseBody
-    @PostMapping("/startImgRecordTask")
+    @Override
     public ResponseResult<String> startImgRecordTask(@RequestParam Integer taskId) {
         ResponseResult<String> responseResult = new ResponseResult();
         try {
             boolean result = imgRecordTaskService.startImgRecordTask(taskId);
             if (result){
-                responseResult.setState(0);
+                responseResult.setState(ResponseCodeEnum.SUCCESS.getCode());
                 responseResult.setMessage("开启成功");
             } else {
-                responseResult.setState(1);
+                responseResult.setState(ResponseCodeEnum.FAILED.getCode());
                 responseResult.setMessage("开启失败");
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             log.error("开启任务失败");
             responseResult.setData(null);
-            responseResult.setState(-1);
+            responseResult.setState(ResponseCodeEnum.FAILED.getCode());
             responseResult.setMessage(e.getMessage());
             return responseResult;
         }
@@ -102,25 +96,23 @@ public class ImageRecordController {
      *
      * @return
      */
-    @Operation(summary = "停止图片录像", tags = "录制管理")
-    @ResponseBody
-    @PostMapping("/stopImgRecordTask")
+    @Override
     public ResponseResult<String> stopImgRecordTask(@RequestParam Integer taskId) {
         ResponseResult<String> responseResult = new ResponseResult();
         try {
             boolean result = imgRecordTaskService.stopImgRecordTask(taskId);
             if (result){
-                responseResult.setState(0);
+                responseResult.setState(ResponseCodeEnum.SUCCESS.getCode());
                 responseResult.setMessage("关闭成功");
             } else {
-                responseResult.setState(1);
+                responseResult.setState(ResponseCodeEnum.FAILED.getCode());
                 responseResult.setMessage("关闭失败");
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             log.error("开启任务失败");
             responseResult.setData(null);
-            responseResult.setState(-1);
+            responseResult.setState(ResponseCodeEnum.FAILED.getCode());
             responseResult.setMessage(e.getMessage());
             return responseResult;
         }

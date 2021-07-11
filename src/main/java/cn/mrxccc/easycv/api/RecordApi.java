@@ -1,11 +1,11 @@
 package cn.mrxccc.easycv.api;
 
+import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,6 +14,7 @@ import java.util.List;
  * @create 2020/12/18
  */
 @Tag(name = "record", description = "the record api")
+@RequestMapping("/api")
 public interface RecordApi {
 
     /**
@@ -21,35 +22,39 @@ public interface RecordApi {
      *
      * @return
      */
-    @Operation(summary = "视频录像",tags = "录制管理")
-    @PostMapping("/start")
-    public ResponseResult start(@RequestParam(required = true) String src, @RequestParam(required = true) String out);
+    @Operation(summary = "添加图片录像", tags = "录制管理")
+    @ResponseBody
+    @PutMapping("/record/add")
+    ResponseResult<String> addImgRecord(@RequestParam Integer imageId);
 
     /**
      * 停止录像
      *
      * @return
      */
-    @Operation(method = "停止录像",tags = "录制管理")
-    @GetMapping("/stop")
-    public ResponseResult stop(@RequestParam(required = true) Integer id);
+    @Operation(summary = "停止图片录像", tags = "录制管理")
+    @ResponseBody
+    @PostMapping("/record/stop")
+    ResponseResult<String> stopImgRecordTask(@RequestParam Integer taskId);
 
     /**
      * 列表
      *
-     * @param isWork
+     * @param
      * @return
      */
-    @Operation(method = "列表",tags = "录制管理")
-    @GetMapping("/list")
-    public List<?> list(@RequestParam(required = false) String isWork);
+    @Operation(summary = "图片录像列表", tags = "录制管理")
+    @ResponseBody
+    @GetMapping("/record/list")
+    ResponseResult<List<ImgRecordTaskDto>> list();
 
     /**
      * 根据id查询
      *
      * @return
      */
-    @Operation(method = "根据id查询",tags = "录制管理")
-    @GetMapping("/get")
-    public ResponseResult get(@RequestParam(required = true) Integer id);
+    @Operation(summary = "开始图片录像", tags = "录制管理")
+    @ResponseBody
+    @PostMapping("/record/start")
+    ResponseResult<String> startImgRecordTask(@RequestParam Integer taskId);
 }

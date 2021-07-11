@@ -4,5 +4,8 @@ ENV BASE_PATH='/opt' \
     PRO_PATH='/opt/project'
 WORKDIR $PRO_PATH
 ADD target/easyCV-1.0.0-SNAPSHOT-exec.jar $PRO_PATH
+ENV IMAGE_PATH='/data/image'
+VOLUME ["/data/image"]
+EXPOSE 9500
 
 ENTRYPOINT ["java","-jar","easyCV-1.0.0-SNAPSHOT-exec.jar"]

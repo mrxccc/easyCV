@@ -11,14 +11,14 @@ spring:
     username: ${MYSQL_USERNAME:root}
     password: ${MYSQL_PASSWORD:fBjDSpr9-da}
     hikari:
-      minimum-idle: 5
-      idle-timeout: 600000
+      connection-timeout: 60000
+      validation-timeout: 3000
+      idle-timeout: 60000
+      login-timeout: 5
+      max-lifetime: 60000
       maximum-pool-size: 10
-      auto-commit: true
-      pool-name: MyHikariCP
-      max-lifetime: 1800000
-      connection-timeout: 30000
-      connection-test-query: SELECT 1
+      minimum-idle: 10
+      read-only: false
   thymeleaf:
     cache: false # 开发时关闭缓存,不然没法看到实时页面
     mode: HTML # 用非严格的 HTML
@@ -46,9 +46,8 @@ mybatis:
 record.maxsize: 10
 easycv:
   easy-darwin:
-    url: http://${EASY_DARWIN_IP:127.0.0.1}:10008/api/v1/
+    url: http://${EASY_DARWIN_IP:127.0.0.1}:${EASY_DARWIN_PORT:10008}/api/v1/
   rtsp.play-url: rtsp://${EASY_DARWIN_RTSP_URL:127.0.0.1}:${EASY_DARWIN_RTSP_PORT:554}/
-  cdn-url: http://123.56.158.85/cdn/AdminLTE-3.1.0-rc/
 
 logging:
   level:

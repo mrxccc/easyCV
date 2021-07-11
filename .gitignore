@@ -33,10 +33,10 @@ logs/*
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
 src/main/resources/static/
 
-!**/src/main/webapp/node_modules/**
+src/main/webapp/easycv-admin/easycv
+**/node_modules/**
 node_modules/
 /dist/
 npm-debug.log*
