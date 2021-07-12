@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ImgVo {
-    String id;
+    Integer id;
     String name;
     String path;
     String uploadTime;

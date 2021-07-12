@@ -36,6 +36,7 @@ logs/*
 src/main/resources/static/
 
 src/main/webapp/easycv-admin/easycv
+src/main/resources/easycv
 **/node_modules/**
 node_modules/
 /dist/

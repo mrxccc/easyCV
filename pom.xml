@@ -116,12 +116,6 @@
     </dependency>
 
     <dependency>
-      <groupId>net.sourceforge.nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-      <version>1.9.22</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.mapstruct</groupId>
       <artifactId>mapstruct</artifactId>
       <version>${mapstruct.version}</version>
@@ -172,6 +166,7 @@
         <includes>
           <include>**/*.xml</include>
           <include>**/Dockerfile</include>
+          <include>/easycv/*</include>
         </includes>
       </resource>
       <resource>
@@ -231,6 +226,73 @@
           </execution>
         </executions>
       </plugin>
+
+      <!--copy文件到指定目录下 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <encoding>${project.build.sourceEncoding}</encoding>
+        </configuration>
+
+        <executions>
+          <execution>
+            <id>copy-spring-boot-webapp</id>
+            <!-- here the phase you need -->
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <encoding>utf-8</encoding>
+              <outputDirectory>${basedir}/src/main/resources/easycv</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/src/main/webapp/easycv-admin/easycv</directory>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>exec-npm-install</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>npm</executable>
+              <arguments>
+                <argument>install</argument>
+              </arguments>
+              <workingDirectory>${basedir}/src/main/webapp/easycv-admin</workingDirectory>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>exec-npm-run-build</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>npm</executable>
+              <arguments>
+                <argument>run</argument>
+                <argument>build:prod</argument>
+              </arguments>
+              <workingDirectory>${basedir}/src/main/webapp/easycv-admin</workingDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   </build>
 

@@ -7,3 +7,11 @@ export function list(data) {
     data
   })
 }
+
+export function deleteImage(data) {
+  return request({
+    url: '/images/delete',
+    method: 'post',
+    data
+  })
+}

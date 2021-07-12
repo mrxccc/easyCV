@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class UserController implements UserApi {
     @PostMapping("/user/login")
+    @Override
     public ResponseResult<UserVo> login(@RequestBody LoginRequest loginRequest){
         log.info(loginRequest.toString());
         UserVo userVo = UserVo.of("SuperAdmin", new String[]{"admin"}, "I am a super administrator", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif", "adminToken");
@@ -22,6 +23,7 @@ public class UserController implements UserApi {
     }
 
     @GetMapping("/user/info")
+    @Override
     public ResponseResult<UserVo> loginInfo(String token){
         log.info(token);
         UserVo userVo = UserVo.of("SuperAdmin", new String[]{"admin"}, "I am a super administrator", "https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif", "adminToken");
@@ -29,6 +31,7 @@ public class UserController implements UserApi {
     }
 
     @PostMapping("/user/logout")
+    @Override
     public ResponseResult<String> Logout(@RequestBody LoginRequest loginRequest){
         log.info(loginRequest.toString());
         return new ResponseResult<>(ResponseCodeEnum.SUCCESS.getCode(), "success");

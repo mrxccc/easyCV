@@ -25,7 +25,7 @@ public class Swagger3Config {
     public GroupedOpenApi createImageRestApi() {
         return GroupedOpenApi.builder()
                 .group("图片管理")
-                .pathsToMatch("/images/**")
+                .pathsToMatch("/api/images/**")
                 .build();
     }
 
@@ -33,7 +33,15 @@ public class Swagger3Config {
     public GroupedOpenApi createRecordRestApi() {
         return GroupedOpenApi.builder()
                 .group("录像管理")
-                .pathsToMatch("/record/**")
+                .pathsToMatch("/api/record/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi createUserRestApi() {
+        return GroupedOpenApi.builder()
+                .group("用户管理")
+                .pathsToMatch("/api/user/**")
                 .build();
     }
 

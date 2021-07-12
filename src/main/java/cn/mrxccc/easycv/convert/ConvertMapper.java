@@ -23,6 +23,7 @@ public interface ConvertMapper {
     ImgVo imgToImgVo(Img img);
 
     @Mappings({
+            @Mapping(target = "id", source = "imgRecordTaskDto.img.id"),
             @Mapping(target = "name", source = "imgRecordTaskDto.img.imgName"),
             @Mapping(target = "path", source = "imgRecordTaskDto.img.imgPath"),
             @Mapping(target = "uploadTime",

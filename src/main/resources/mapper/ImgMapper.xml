@@ -197,4 +197,12 @@
     select <include refid="Img_Record_Map_List"/>
     from img left join img_record_task as rt on rt.image_id = img.id
   </select>
+  <delete id="batchDelete">
+    <!--@mbg.generated generated on Tue Dec 15 18:38:34 CST 2020.-->
+    delete from img
+    where id in
+    <foreach collection="imageIds" item="item" separator=",">
+      ( #{item,jdbcType=INTEGER})
+    </foreach>
+  </delete>
 </mapper>

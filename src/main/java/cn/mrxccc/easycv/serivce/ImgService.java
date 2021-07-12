@@ -18,9 +18,12 @@ public interface ImgService{
 
     List<Img> selectAll();
 
-    Integer hasTask(String imageId);
+    Integer hasTask(Integer imageId);
 
     List<ImgRecordTaskDto> selectImgRecordTask();
 
 
+    Img getImageById(Integer imageId);
+
+    void deleteByImageIds(List<Integer> imageIds);
 }

@@ -8,6 +8,8 @@ import cn.mrxccc.easycv.mapper.ImgMapper;
 import java.util.List;
 import cn.mrxccc.easycv.domain.Img;
 import cn.mrxccc.easycv.serivce.ImgService;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
 @Slf4j
 public class ImgServiceImpl implements ImgService{
@@ -31,6 +33,7 @@ public class ImgServiceImpl implements ImgService{
     }
 
     @Override
+    @Transactional
     public int insertOrUpdate(Img record) {
         return imgMapper.insertOrUpdate(record);
     }
@@ -46,13 +49,24 @@ public class ImgServiceImpl implements ImgService{
     }
 
     @Override
-    public Integer hasTask(String imageId) {
+    public Integer hasTask(Integer imageId) {
         return imgMapper.countTaskByImageId(imageId);
     }
 
     @Override
     public List<ImgRecordTaskDto> selectImgRecordTask() {
         return imgMapper.selectImgRecordTask();
+    }
+
+    @Override
+    public Img getImageById(Integer imageId) {
+        return imgMapper.selectByPrimaryKey(imageId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteByImageIds(List<Integer> imageIds) {
+        imgMapper.batchDelete(imageIds);
     }
 
 

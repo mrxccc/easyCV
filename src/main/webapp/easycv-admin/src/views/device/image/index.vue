@@ -58,7 +58,6 @@
             <el-button
               size="mini"
               type="danger"
-              disabled
               @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -70,9 +69,12 @@
       <el-upload
         class="upload-demo"
         drag
-        action="http://localhost:9500/images/upload"
+        ref="upload"
+        :action="uploadPath"
         multiple
-        :file-list="attachList"
+        name="files"
+        :auto-upload="false"
+        :file-list="fileList"
         :on-success="uploadSuccess"
         :before-upload="beforeUpload">
         <i class="el-icon-upload"></i>
@@ -80,6 +82,7 @@
         <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
+        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
         <el-button @click="dialogFormVisible = false">关闭</el-button>
       </div>
     </el-dialog>
@@ -89,19 +92,22 @@
 
 
 <script>
-import {list,hasTask} from '@/api/img'
-import {add} from "@/api/record";
+import {list,deleteImage} from '@/api/img'
+import {add} from "@/api/record"
 
 export default {
   data() {
     return {
       list: null,
       listLoading: true,
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      uploadPath: "",
+      fileList:[]
     }
   },
   created() {
     this.fetchData()
+    this.uploadPath = process.env.VUE_APP_BASE_API + "/images/upload"
   },
   methods: {
     fetchData() {
@@ -111,8 +117,12 @@ export default {
         this.listLoading = false
       })
     },
+    submitUpload(){
+      this.$refs.upload.submit();
+    },
     handleAddTask(index, row){
       add(row.id).then(response => {
+        let msg = response.data.message;
         if (response.data.code == 20000){
           this.$notify({
             title: '成功',
@@ -123,7 +133,7 @@ export default {
         } else {
           this.$notify.error({
             title: '失败',
-            message: '添加失败'
+            message: msg
           });
         }
       })
@@ -131,20 +141,47 @@ export default {
     handleCreate(){
       this.dialogFormVisible = true
     },
+    handleDelete(index, row){
+      var ids = [];
+      ids.push(row.id)
+      deleteImage(ids).then(response => {
+        let msg = response.message
+        if (response.code == 20000){
+          this.$notify({
+            title: '成功',
+            message: msg,
+            type: 'success'
+          });
+          this.fetchData()
+        } else {
+          this.$notify.error({
+            title: '失败',
+            message: msg
+          });
+        }
+      })
+    },
     beforeUpload(file){
       console.log("上传之前")
     },
     uploadSuccess(response, file, fileList){
-      console.log("上传成功")
+      let msg = response.message;
+      if (response.code==20000){
+        this.$notify({
+          title: '成功',
+          message: '上传成功',
+          type: 'success'
+        });
+        this.fetchData()
+      } else {
+        this.$notify.error({
+          title: '失败',
+          message: msg
+        });
+      }
       this.dialogFormVisible = false
       this.fetchData()
-    },
-    beforeRemove(file, fileList){
-      console.log('我是before-remove钩子函数，我被调用了');
-    },
-    handleRemove(file, fileList){
-      console.log('我是on-remove钩子函数，我被调用了');
-    },
+    }
   }
 }
 </script>

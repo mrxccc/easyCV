@@ -19,7 +19,9 @@ public interface ImgMapper extends MyMapper<Img> {
 
     int insertOrUpdateSelective(Img record);
 
-    Integer countTaskByImageId(@Param("imageId") String imageId);
+    Integer countTaskByImageId(@Param("imageId") Integer imageId);
 
     List<ImgRecordTaskDto> selectImgRecordTask();
+
+    void batchDelete(@Param("imageIds") List<Integer> imageIds);
 }

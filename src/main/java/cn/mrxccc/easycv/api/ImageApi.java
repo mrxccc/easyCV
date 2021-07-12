@@ -22,15 +22,20 @@ public interface ImageApi {
     @Operation(summary = "图片上传")
     @ResponseBody
     @PostMapping(value = "/images/upload")
-    ResponseResult<String> upload(@io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = "multipart/form-data", schema = @Schema(type = "object", format = "binary"))) MultipartFile file);
+    ResponseResult<String> upload(@io.swagger.v3.oas.annotations.parameters.RequestBody(content = @Content(mediaType = "multipart/form-data", schema = @Schema(type = "object", format = "binary"))) MultipartFile[] files);
 
     @Operation(summary = "图片列表")
     @ResponseBody
     @GetMapping(value = "/images/list", produces = { "application/json" })
     ResponseResult<List<ImgVo>> list();
 
+    @Operation(summary = "图片删除")
+    @ResponseBody
+    @PostMapping(value = "/images/delete")
+    ResponseResult<String> delete(@RequestBody List<Integer> imageIds);
+
     @Operation(summary = "图片是否存在任务")
     @ResponseBody
     @GetMapping(value = "/images/hasTask")
-    ResponseResult<String> hasTask(@RequestParam String imageId);
+    ResponseResult<String> hasTask(@RequestParam Integer imageId);
 }
