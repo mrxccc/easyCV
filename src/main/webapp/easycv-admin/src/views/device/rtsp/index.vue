@@ -45,8 +45,8 @@
         </el-table-column>
         <el-table-column label="状态"  align="center">
           <template slot-scope="scope">
-            <el-tag v-if="scope.row.imgRecordTask.status == 1">标签一</el-tag>
-            <el-tag v-if="scope.row.imgRecordTask.status == 2">标签二</el-tag>
+            <el-tag v-if="scope.row.imgRecordTask.status == 1">已开启</el-tag>
+            <el-tag type="danger" v-if="scope.row.imgRecordTask.status == -1">已关闭</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="操作"  align="center">

@@ -82,7 +82,7 @@
         <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
       </el-upload>
       <div slot="footer" class="dialog-footer">
-        <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传</el-button>
+        <el-button type="success" @click="submitUpload">上传</el-button>
         <el-button @click="dialogFormVisible = false">关闭</el-button>
       </div>
     </el-dialog>
@@ -122,8 +122,8 @@ export default {
     },
     handleAddTask(index, row){
       add(row.id).then(response => {
-        let msg = response.data.message;
-        if (response.data.code == 20000){
+        let msg = response.message;
+        if (response.code == 20000){
           this.$notify({
             title: '成功',
             message: '添加成功',

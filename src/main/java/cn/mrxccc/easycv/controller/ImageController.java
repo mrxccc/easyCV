@@ -5,26 +5,18 @@ import cn.mrxccc.easycv.config.MyProperties;
 import cn.mrxccc.easycv.convert.ConvertMapper;
 import cn.mrxccc.easycv.domain.Img;
 import cn.mrxccc.easycv.domain.ResponseCodeEnum;
-import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.serivce.ImgService;
 import cn.mrxccc.easycv.vo.ImgVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author mrxccc
@@ -105,4 +97,5 @@ public class ImageController implements ImageApi {
         }
         return new ResponseResult(ResponseCodeEnum.FAILED.getCode(),"未添加rtsp任务");
     }
+
 }
