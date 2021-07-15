@@ -125,10 +125,10 @@ docker run -p 9500:9500 --env MYSQL_HOST=ip --env MYSQL_PASSWORD=password --env 
 
 > 特别注意：目前只支持png的图片解析，上传其他图片在转流的过程中会出现不可预知的问题
 
-![image-20210715181023724](C:\Users\caijiacheng\AppData\Roaming\Typora\typora-user-images\image-20210715181023724.png)
+![image-20210715181023724](https://github.com/mrxccc/easyCV/blob/main/doc/image/image-20210715181023724.png)
 
 添加后，该图片的rtsp转流任务是默认是关闭的，需要手动启动
 
-![image-20210715181219325](C:\Users\caijiacheng\AppData\Roaming\Typora\typora-user-images\image-20210715181219325.png)
+![image-20210715172230253](https://github.com/mrxccc/easyCV/blob/main/doc/image/image-20210715172230253.png)
 
 列表中的rtsp地址就是一个使用图片进行转发的rtsp直播流
