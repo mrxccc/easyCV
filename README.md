@@ -61,8 +61,6 @@ mariadb数据按照完成后，初始化数据库，对应的数据库文件在`
 
 2.下载[easyDarwin](https://github.com/EasyDarwin/EasyDarwin)对应环境（windows，linux）的软件，按照官方文档启动即可，默认端口10008，会看到推流拉流列表的界面
 
-![image-20210715172230253](C:\Users\caijiacheng\AppData\Roaming\Typora\typora-user-images\image-20210715172230253.png)
-
 3.启动后端服务
 
 后端启动环境变量说明：
