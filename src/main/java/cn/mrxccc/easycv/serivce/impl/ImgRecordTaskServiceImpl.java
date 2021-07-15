@@ -2,12 +2,17 @@ package cn.mrxccc.easycv.serivce.impl;
 
 import cn.mrxccc.easycv.config.MyProperties;
 import cn.mrxccc.easycv.domain.Img;
+import cn.mrxccc.easycv.domain.TaskStatusEnum;
 import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 import cn.mrxccc.easycv.entity.RecordTask;
 import cn.mrxccc.easycv.manager.TasksManager;
 import cn.mrxccc.easycv.mapper.ImgMapper;
+import cn.mrxccc.easycv.query.PushersQuery;
 import cn.mrxccc.easycv.recorder.ImageRecord;
 import cn.mrxccc.easycv.serivce.EasyDarwin;
+import cn.mrxccc.easycv.vo.EasyDarwinPushers;
+import cn.mrxccc.easycv.vo.Pushers;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
@@ -24,6 +29,8 @@ import cn.mrxccc.easycv.mapper.ImgRecordTaskMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import cn.mrxccc.easycv.domain.ImgRecordTask;
 import cn.mrxccc.easycv.serivce.ImgRecordTaskService;
@@ -51,9 +58,12 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
     @Resource(name = "asyncTaskExecutor")
     private ThreadPoolTaskExecutor taskExecutor;
 
+    @Autowired
+    private MyProperties properties;
+
     @Override
     public int updateBatch(List<ImgRecordTask> list) {
-        return imgRecordTaskMapper.updateBatch(list);
+        return imgRecordTaskMapper.updateBatchSelective(list);
     }
 
     @Override
@@ -90,10 +100,21 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
     public boolean stopImgRecordTask(Integer taskId) {
         ImageRecord recorderTask = tasksManager.getRecorderTask(taskId);
         boolean isStop = tasksManager.stop(recorderTask);
-        if (recorderTask == null || isStop){
-            updateStatusByTaskId(taskId, -1);
+        if (recorderTask != null || isStop){
+            updateStatusByTaskId(taskId, TaskStatusEnum.STOP.getCode());
+            return isStop;
         }
-        return isStop;
+        return true;
+    }
+
+    @Override
+    public ImgRecordTask selectTaskById(Integer taskId) {
+        return imgRecordTaskMapper.selectByPrimaryKey(taskId);
+    }
+
+    @Override
+    public void deleteTaskById(Integer taskId) {
+        imgRecordTaskMapper.deleteByPrimaryKey(taskId);
     }
 
     /**
@@ -104,6 +125,7 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
      * @author caijiacheng
      * @date 2020/12/21 18:28
      */
+    @SneakyThrows
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ImgRecordTask recordImgByImgId(Integer imageId) {
@@ -115,26 +137,21 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
         String playUrl = myProperties.getRtspPlayUrl() + img.getImgName().split("\\.")[0];
         ImgRecordTask imgRecordTask = null;
         try {
-            imgRecordTask = imgRecordTaskMapper.selectByPrimaryKey(imageId);
+            imgRecordTask = imgRecordTaskMapper.selectByImageId(imageId);
             if (imgRecordTask == null) {
                 imgRecordTask = new ImgRecordTask();
                 imgRecordTask.setImageId(imageId);
                 imgRecordTask.setPlayUrl(playUrl);
-                imgRecordTask.setStatus(-1);
+                imgRecordTask.setStatus(TaskStatusEnum.STOP.getCode());
                 imgRecordTask.setCreateTime(LocalDateTime.now());
                 imgRecordTask.setUpdateTime(LocalDateTime.now());
                 imgRecordTaskMapper.insert(imgRecordTask);
                 return imgRecordTask;
             }
-            // 开启录像
-            ImageRecord recorder = tasksManager.createRecorder(img.getImgPath(), imgRecordTask.getPlayUrl(), imgRecordTask.getId());
-            boolean isStart = tasksManager.start(recorder);
-            if (isStart){
-                updateStatusByTaskId(imgRecordTask.getId(), 1);
-            }
         } catch (Exception e) {
-            log.info("开流失败");
+            log.info("添加图片{}任务失败",imageId);
             log.error(e.getMessage(), e);
+            throw e;
         }
 
         return imgRecordTask;
@@ -192,17 +209,32 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
     @Override
     public void updateStatusAllDate() {
         List<ImgRecordTask> imgRecordTasks = imgRecordTaskMapper.selectAll();
+        PushersQuery pushersQuery = new PushersQuery();
+        pushersQuery.setStart(0);
+        pushersQuery.setLimit(100);
+        EasyDarwinPushers pushers = easyDarwin.getPushers(pushersQuery);
+        List<Pushers> pushersList = pushers.getRows();
+        List<String> pathList = pushersList.stream().map(Pushers::getSource).collect(Collectors.toList());
         imgRecordTasks.forEach(e -> {
-            e.setStatus(-1);
-            e.setUpdateTime(LocalDateTime.now());
-            e.setEndTime(LocalDateTime.now());
+            if (!pathList.contains(e.getPlayUrl())){
+                e.setStatus(-1);
+                e.setUpdateTime(LocalDateTime.now());
+                e.setEndTime(LocalDateTime.now());
+                log.info("id为{}的任务已更新为暂停状态", e.getId());
+            } else {
+                e.setStatus(1);
+                e.setUpdateTime(LocalDateTime.now());
+                e.setEndTime(LocalDateTime.now());
+                log.info("id为{}的任务已更新为开启状态", e.getId());
+            }
+            try {
+                imgRecordTaskMapper.updateByPrimaryKey(e);
+            } catch (Exception exception) {
+                log.error(exception.getMessage(),exception);
+                log.error("更新id：{}的任务状态为{}失败,",e.getId(),e.getStatus());
+            }
         });
-        try {
-            updateBatch(imgRecordTasks);
-        } catch (Exception e) {
-            log.error("更新所有任务为暂停状态失败");
-        }
-        log.info("更新成功{}条数据", imgRecordTasks.size());
+
     }
 
 }

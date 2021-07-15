@@ -46,3 +46,13 @@ export function hasTask(id) {
     }
   })
 }
+
+export function deleteTask(id) {
+  return request({
+    url: '/record/delete',
+    method: 'post',
+    params: {
+      taskId: id
+    }
+  })
+}

@@ -1,5 +1,6 @@
 package cn.mrxccc.easycv.manager;
 
+import cn.mrxccc.easycv.domain.TaskStatusEnum;
 import cn.mrxccc.easycv.mapper.ImgRecordTaskMapper;
 import cn.mrxccc.easycv.recorder.ImageRecord;
 import cn.mrxccc.easycv.serivce.ImgRecordTaskService;
@@ -25,9 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component("imgRecordTasksManager")
 @Slf4j
 public class ImgRecordTasksManager implements TasksManager {
-    public static final int START_STATUS = 1;
-    public static final int PAUSE_STATUS = -1;
-    public static final int STOP_STATUS = 2;
 
     @Autowired
     ImgRecordTaskMapper imgRecordTaskMapper;
@@ -44,7 +42,6 @@ public class ImgRecordTasksManager implements TasksManager {
     @Override
     public synchronized ImageRecord createRecorder(String imgPath, String rtspPalyPath, Integer taskId) throws Exception {
         log.debug("创建时，当前池数量：" + taskExecutor.getPoolSize() + ",空闲数量：" + (taskExecutor.getPoolSize() - taskExecutor.getActiveCount()) + ",工作数量：" + taskExecutor.getActiveCount());
-//        ImageRecord recorder = new ImageRecord();
         ImageRecord recorder = new ImageRecord(imgPath, rtspPalyPath, avutil.AV_PIX_FMT_YUV420P);
         recorder.setImgRecordTaskService(imgRecordTaskService);
         recorder.from(imgPath).to(rtspPalyPath);
@@ -57,7 +54,7 @@ public class ImgRecordTasksManager implements TasksManager {
     public boolean start(ImageRecord task) {
         if (task != null) {
             task.setStartTime(LocalDateTime.now());// 设置开始时间
-            task.setStatus(START_STATUS);// 状态设为开始
+            task.setStatus(TaskStatusEnum.WORKING.getCode());// 状态设为开始
             taskExecutor.execute(task);
             taskMap.put(task.getTaskId(), task);
             return true;
@@ -79,12 +76,13 @@ public class ImgRecordTasksManager implements TasksManager {
     public boolean stop(ImageRecord task) {
         if (task != null) {
             try {
-                task.setStatus(STOP_STATUS);
+                task.setStatus(TaskStatusEnum.STOP.getCode());
                 task.getRecord().stop();// 停止录制
                 taskMap.remove(task.getTaskId());
                 return true;
             } catch (FrameRecorder.Exception e) {
-                e.printStackTrace();
+                log.info("停止任务{}失败", task.getTaskId());
+                return false;
             }
         }
         return false;
@@ -115,7 +113,6 @@ public class ImgRecordTasksManager implements TasksManager {
 
     @Override
     public boolean exist(String src, String out) {
-//		System.err.println("检查本地服务是否在工作的录像任务："+src+","+out);
         return false;
     }
 

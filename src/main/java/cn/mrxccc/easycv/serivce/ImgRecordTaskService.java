@@ -32,4 +32,8 @@ public interface ImgRecordTaskService {
     ImageRecord getImgRecordTask(Integer taskId);
 
     boolean stopImgRecordTask(Integer taskId);
+
+    ImgRecordTask selectTaskById(Integer taskId);
+
+    void deleteTaskById(Integer taskId);
 }

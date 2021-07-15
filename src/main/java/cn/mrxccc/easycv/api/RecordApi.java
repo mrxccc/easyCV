@@ -57,4 +57,9 @@ public interface RecordApi {
     @ResponseBody
     @PostMapping("/record/start")
     ResponseResult<String> startImgRecordTask(@RequestParam Integer taskId);
+
+    @Operation(summary = "图片删除")
+    @ResponseBody
+    @PostMapping(value = "/record/delete")
+    ResponseResult<String> delete(@RequestParam Integer taskId);
 }

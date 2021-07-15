@@ -16,13 +16,13 @@ public class MinioConfig {
 
     private String endpoint;
 
-    private int port;
+    private int port = 9000;
 
     private String accessKey;
 
     private String secretKey;
 
-    private Boolean secure;
+    private Boolean secure = false;
 
     private String bucketName;
 

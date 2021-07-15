@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -38,4 +39,9 @@ public interface ImageApi {
     @ResponseBody
     @GetMapping(value = "/images/hasTask")
     ResponseResult<String> hasTask(@RequestParam Integer imageId);
+
+    @Operation(summary = "获取图片url")
+    @ResponseBody
+    @GetMapping(value = { "/images/view" })
+    ResponseResult<String> view(@RequestParam("imageName") String imageName)  throws IOException;
 }

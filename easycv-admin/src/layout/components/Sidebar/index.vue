@@ -3,6 +3,7 @@
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
+        :default-openeds="['/device']"
         :default-active="activeMenu"
         :collapse="isCollapse"
         :background-color="variables.menuBg"

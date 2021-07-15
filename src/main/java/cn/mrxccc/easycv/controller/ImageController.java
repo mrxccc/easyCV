@@ -10,13 +10,14 @@ import cn.mrxccc.easycv.serivce.ImgService;
 import cn.mrxccc.easycv.vo.ImgVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author mrxccc
@@ -34,6 +35,9 @@ public class ImageController implements ImageApi {
     @Autowired
     private ConvertMapper convertMapper;
 
+    @Value("${server.port}")
+    private String port;
+
     @Override
     public ResponseResult<String> upload(MultipartFile[] files) {
         if (files == null || files.length == 0) {
@@ -41,8 +45,7 @@ public class ImageController implements ImageApi {
         }
         for (MultipartFile file : files) {
             String filePath = myProperties.getImageDirPath();
-            System.out.println(filePath);
-            String fileName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+            String fileName = file.getOriginalFilename();
             log.info("转换后的文件名为：[{}]!!", fileName);
             File dest = new File(filePath + fileName);
             //判断父目录是否存在
@@ -54,7 +57,7 @@ public class ImageController implements ImageApi {
                 file.transferTo(dest);
                 Img img = new Img();
                 img.setImgName(dest.getName());
-                img.setImgPath(dest.getPath());
+                img.setImgPath("http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port + myProperties.getMappingPath() + dest.getName());
                 img.setCreateTime(LocalDateTime.now());
                 img.setUpdateTime(LocalDateTime.now());
                 imgService.insertOrUpdate(img);
@@ -98,4 +101,9 @@ public class ImageController implements ImageApi {
         return new ResponseResult(ResponseCodeEnum.FAILED.getCode(),"未添加rtsp任务");
     }
 
+    @Override
+    public ResponseResult<String> view(String imageName) throws IOException {
+        String url = "http://" + InetAddress.getLocalHost().getHostAddress() + ":" + port + myProperties.getMappingPath() + imageName;
+        return new ResponseResult(ResponseCodeEnum.SUCCESS.getCode(), "success", url);
+    }
 }

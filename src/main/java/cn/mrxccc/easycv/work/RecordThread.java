@@ -2,6 +2,7 @@ package cn.mrxccc.easycv.work;
 
 import java.io.IOException;
 
+import cn.mrxccc.easycv.domain.TaskStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
@@ -17,24 +18,24 @@ public class RecordThread extends Thread {
     /**
      * 开始状态
      */
-    public static final int START_STATUS = 1;
+    public static final int START_STATUS = TaskStatusEnum.WORKING.getCode();
     /**
      * 停止状态
      */
-    public static final int STOP_STATUS = 2;
+    public static final int STOP_STATUS = TaskStatusEnum.STOP.getCode();
+
     /**
-     * 暂停状态
+     * 停止状态
      */
-    public static final int PAUSE_STATUS = 1;
+    public static final int ORIGINAL_STATUS = TaskStatusEnum.ORIGINAL.getCode();
 
     protected FFmpegFrameGrabber grabber = null;
     protected FFmpegFrameRecorder record = null;
 
     /**
-     * 运行状态，0-初始状态，1-运行，2-停止
+     * 运行状态，0-初始状态，1-运行，-1-停止
      */
     protected volatile int status = 0;
-    protected volatile int pause = 0;//是否暂停，1-暂停
     protected int err_stop_num = 3;//默认错误数量达到三次终止录制
 
     /**
@@ -93,7 +94,7 @@ public class RecordThread extends Thread {
     public void run() {
         go();
         for (; ; ) {
-            if (status == 2) {
+            if (status == STOP_STATUS) {
                 log.debug("工作线程进入等待状态");
                 synchronized (this) {
                     try {
@@ -113,20 +114,13 @@ public class RecordThread extends Thread {
      * 核心转换处理循环
      */
     private void mainLoop() {
-        long startime = System.currentTimeMillis();
+        long starTime = System.currentTimeMillis();
         //采集或推流失败次数
         long err_index = 0;
         long frame_index = 0;
-        //暂停次数
-        int pause_num = 0;
         try {
             for (; status == START_STATUS; frame_index++) {
                 Frame pkt = grabber.grabImage();
-                //暂停状态
-                if (pause == 1) {
-                    pause_num++;
-                    continue;
-                }
                 //采集空包结束
                 if (pkt == null) {
                     //超过三次则终止录制
@@ -148,7 +142,7 @@ public class RecordThread extends Thread {
         } finally {
             status = STOP_STATUS;
             stopRecord();
-            log.info(getName() + "工作线程的录像任务已结束，持续时长：" + (System.currentTimeMillis() - startime) / 1000 + "秒，共录制：" + frame_index + "帧，遇到的错误数：" + err_index + ",录制期间共暂停次数：" + pause_num);
+            log.info(getName() + "工作线程的录像任务已结束，持续时长：" + (System.currentTimeMillis() - starTime) / 1000 + "秒，共录制：" + frame_index + "帧，遇到的错误数：" + err_index);
         }
     }
 
@@ -170,24 +164,6 @@ public class RecordThread extends Thread {
     }
 
     /**
-     * 暂停
-     */
-    public void pause() {
-        pause = PAUSE_STATUS;
-    }
-
-    /**
-     * 继续（从暂停中恢复）
-     */
-    public void carryon() {
-        //如果暂停状态为1才允许
-        if (pause == PAUSE_STATUS) {
-            pause = 0;
-            status = START_STATUS;
-        }
-    }
-
-    /**
      * 结束
      */
     public void over() {
@@ -199,7 +175,7 @@ public class RecordThread extends Thread {
      */
     public void go() {
         //如果初始状态，则设置为开始状态1
-        if (status == 0) {
+        if (status == ORIGINAL_STATUS) {
             status = START_STATUS;
             log.info("开启工作线程");
         }

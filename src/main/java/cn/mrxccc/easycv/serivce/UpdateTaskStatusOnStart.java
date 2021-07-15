@@ -17,6 +17,9 @@ public class UpdateTaskStatusOnStart implements ApplicationListener<ApplicationR
     @Autowired
     private ImgRecordTaskService imgRecordTaskService;
 
+    @Autowired
+    EasyDarwin easyDarwin;
+
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         log.info("UpdateTaskStatusOnStart开始执行");

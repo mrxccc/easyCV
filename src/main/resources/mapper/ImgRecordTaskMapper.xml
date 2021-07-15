@@ -36,7 +36,7 @@
   </sql>
   <sql id="Img_Record_List">
     <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
-    id, imageId, `status`, play_url, create_time, update_time, end_time
+    id, image_id, `status`, play_url, create_time, update_time, end_time
   </sql>
   <update id="updateBatch" parameterType="java.util.List">
     <!--@mbg.generated generated on Mon Dec 21 10:48:37 CST 2020.-->
@@ -259,5 +259,9 @@
   <select id="selectImgRecordTask" resultMap="ImgRecordMap">
     select <include refid="Img_Record_Map_List"/>
     from img_record_task rt left join img as img on rt.image_id = img.id
+  </select>
+  <select id="selectByImageId" resultMap="BaseResultMap">
+    select <include refid="Img_Record_List"/>
+    from img_record_task where image_id = #{imageId}
   </select>
 </mapper>

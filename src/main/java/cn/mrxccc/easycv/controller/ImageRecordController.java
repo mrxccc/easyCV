@@ -3,6 +3,7 @@ package cn.mrxccc.easycv.controller;
 import cn.mrxccc.easycv.api.RecordApi;
 import cn.mrxccc.easycv.domain.ImgRecordTask;
 import cn.mrxccc.easycv.domain.ResponseCodeEnum;
+import cn.mrxccc.easycv.domain.TaskStatusEnum;
 import cn.mrxccc.easycv.dto.ImgRecordTaskDto;
 import cn.mrxccc.easycv.dto.ResponseResult;
 import cn.mrxccc.easycv.serivce.EasyDarwin;
@@ -27,9 +28,6 @@ import java.util.List;
 public class ImageRecordController implements RecordApi {
     @Autowired
     ImgRecordTaskService imgRecordTaskService;
-
-    @Autowired
-    EasyDarwin easyDarwin;
 
     /**
      * 增加图片录像
@@ -118,5 +116,23 @@ public class ImageRecordController implements RecordApi {
         }
 
         return responseResult;
+    }
+
+    @Override
+    public ResponseResult<String> delete(Integer taskId) {
+        if (taskId == null){
+            return new ResponseResult(ResponseCodeEnum.FAILED.getCode(), "参数不合法");
+        }
+        ImgRecordTask imgRecordTask = imgRecordTaskService.selectTaskById(taskId);
+        if (imgRecordTask == null) {
+            return new ResponseResult(ResponseCodeEnum.FAILED.getCode(),"任务不存在");
+        }
+        if (imgRecordTaskService.stopImgRecordTask(taskId)){
+            imgRecordTaskService.deleteTaskById(taskId);
+        } else {
+            return new ResponseResult(ResponseCodeEnum.FAILED.getCode(),"任务未停止成功,删除失败");
+        }
+
+        return new ResponseResult(ResponseCodeEnum.SUCCESS.getCode(),"删除成功");
     }
 }

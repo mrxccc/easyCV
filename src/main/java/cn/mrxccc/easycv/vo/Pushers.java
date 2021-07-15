@@ -17,17 +17,25 @@ public class Pushers {
      */
     String path;
     /**
+     * 播放地址
+     */
+    String url;
+    /**
+     * 源地址
+     */
+    String source;
+    /**
      * 传输模式：TCP/UDP
      */
     String transType;
     /**
      * 入口流量
      */
-    Integer inBytes;
+    Long inBytes;
     /**
      * 出口流量
      */
-    Integer outBytes;
+    Long outBytes;
     /**
      * 开始时间
      */

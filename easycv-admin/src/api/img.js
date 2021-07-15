@@ -15,3 +15,13 @@ export function deleteImage(data) {
     data
   })
 }
+
+export function view(imgName) {
+  return request({
+    url: '/images/view',
+    method: 'get',
+    params: {
+      imageName: imgName
+    }
+  })
+}

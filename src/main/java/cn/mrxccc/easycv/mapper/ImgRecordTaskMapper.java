@@ -19,4 +19,6 @@ public interface ImgRecordTaskMapper extends MyMapper<ImgRecordTask> {
     int insertOrUpdateSelective(ImgRecordTask record);
 
     List<ImgRecordTaskDto> selectImgRecordTask();
+
+    ImgRecordTask selectByImageId(@Param("imageId") Integer imageId);
 }

@@ -19,6 +19,8 @@ import java.io.File;
 public class MyProperties implements ApplicationContextAware {
     private String imageDirPath;
 
+    private String mappingPath = "/static/images/";
+
     @Value("${easycv.rtsp.play-url}")
     private String rtspPlayUrl;
 

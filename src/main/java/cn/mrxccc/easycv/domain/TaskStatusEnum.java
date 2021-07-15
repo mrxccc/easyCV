@@ -1,10 +1,17 @@
 package cn.mrxccc.easycv.domain;
 
-public enum ResponseCodeEnum {
-    SUCCESS(20000),FAILED(-1);
+/**
+ * @author mrxccc
+ * @create 2021/7/15
+ * @since 1.0.0
+ */
+public enum TaskStatusEnum {
+    WORKING(1),
+    STOP(-1),
+    ORIGINAL(0);
     private Integer code;
 
-    ResponseCodeEnum(Integer code) {
+    TaskStatusEnum(Integer code) {
         this.code = code;
     }
 

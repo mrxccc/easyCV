@@ -7,7 +7,7 @@
           style="margin-left: 10px;"
           type="primary"
           icon="el-icon-edit"
-          @click="handleCreate">
+          @click="uploadDialogOpen">
           上传图片
         </el-button>
       </el-col>
@@ -30,17 +30,16 @@
         </el-table-column>
         <el-table-column label="图片名称">
           <template slot-scope="scope">
-            {{ scope.row.name }}
-          </template>
-        </el-table-column>
-        <el-table-column label="路径" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.path }}</span>
+            {{scope.row.name}}
           </template>
         </el-table-column>
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
-            <img width="60" height="60" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png">
+            <el-popover placement="right" title trigger="hover">
+              <img :src="scope.row.path" style="height: 200px;width: 300px" align="center" />
+              <img slot="reference" :src="scope.row.path"  style="max-height: 50px;max-width: 130px"
+              />
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="上传时间"  align="center">
@@ -83,7 +82,7 @@
       </el-upload>
       <div slot="footer" class="dialog-footer">
         <el-button type="success" @click="submitUpload">上传</el-button>
-        <el-button @click="dialogFormVisible = false">关闭</el-button>
+        <el-button @click="uploadDialogClose">关闭</el-button>
       </div>
     </el-dialog>
   </div>
@@ -138,8 +137,13 @@ export default {
         }
       })
     },
-    handleCreate(){
+    uploadDialogOpen(){
       this.dialogFormVisible = true
+    },
+    uploadDialogClose(){
+      this.fileList = []
+      this.dialogFormVisible = false
+
     },
     handleDelete(index, row){
       var ids = [];

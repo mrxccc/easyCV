@@ -19,14 +19,6 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 10
       read-only: false
-  thymeleaf:
-    cache: false # 开发时关闭缓存,不然没法看到实时页面
-    mode: HTML # 用非严格的 HTML
-    encoding: UTF-8
-    prefix: classpath:/templates/
-    suffix: .html
-    servlet:
-      content-type: text/html
   servlet:
     multipart:
       max-file-size: 10MB

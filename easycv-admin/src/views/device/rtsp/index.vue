@@ -40,7 +40,10 @@
         </el-table-column>
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
-            <img width="60" height="60" src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png">
+            <el-popover placement="right" title trigger="hover">
+              <img :src="scope.row.img.imgPath" style="height: 200px;width: 300px" align="center" />
+              <img slot="reference" :src="scope.row.img.imgPath"  style="max-height: 50px;max-width: 130px"/>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="状态"  align="center">
@@ -65,7 +68,6 @@
             <el-button
               size="mini"
               type="danger"
-              disabled
               @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -77,7 +79,7 @@
 
 
 <script>
-import { add,stop,list,start } from '@/api/record'
+import { stop,list,start,deleteTask } from '@/api/record'
 
 export default {
   data() {
@@ -133,6 +135,30 @@ export default {
       })
     },
     handleDelete(index,row){
+      this.$confirm('此操作将永久删除该任务, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        deleteTask(row.imgRecordTask.id).then(response => {
+          let msg = response.message
+          if (response.code == 20000){
+            this.$notify({
+              title: '成功',
+              message: '删除成功',
+              type: 'success'
+            });
+            this.fetchData()
+          } else {
+            this.$notify.error({
+              title: '失败',
+              message: msg
+            });
+          }
+        })
+      }).catch(() => {
+
+      });
 
     }
   }

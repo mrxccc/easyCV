@@ -35,7 +35,7 @@ logs/*
 /.nb-gradle/
 src/main/resources/static/
 
-src/main/webapp/easycv-admin/easycv
+/easycv-admin/easycv
 src/main/resources/easycv
 **/node_modules/**
 node_modules/
