@@ -25,17 +25,12 @@
       >
         <el-table-column align="center" label="ID" width="95">
           <template slot-scope="scope">
-            {{ scope.$index }}
+            {{ scope.row.imgRecordTask.id }}
           </template>
         </el-table-column>
         <el-table-column label="rtsp地址">
           <template slot-scope="scope">
             {{ scope.row.imgRecordTask.playUrl }}
-          </template>
-        </el-table-column>
-        <el-table-column label="路径" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.imgRecordTask.createTime }}</span>
           </template>
         </el-table-column>
         <el-table-column label="图片" align="center">

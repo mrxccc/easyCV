@@ -31,7 +31,7 @@ public class MyProperties implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         String imagePath = applicationContext.getEnvironment().getProperty("IMAGE_PATH");
         if (StringUtils.isEmpty(imagePath)) {
-            setImageDirPath(System.getProperty("java.io.tmpdir") + "easycvImage" + File.separator);
+            setImageDirPath(System.getProperty("java.io.tmpdir") + File.separator+ "easycvImage" + File.separator);
         } else {
             setImageDirPath(imagePath);
         }
