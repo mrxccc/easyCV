@@ -173,9 +173,12 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
             boolean isStart = tasksManager.start(recorderTask);
             if (isStart){
                 updateStatusByTaskId(taskId, 1);
+            } else {
+                return false;
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+            return false;
         }
         return true;
     }
@@ -220,12 +223,12 @@ public class ImgRecordTaskServiceImpl implements ImgRecordTaskService {
                 e.setStatus(-1);
                 e.setUpdateTime(LocalDateTime.now());
                 e.setEndTime(LocalDateTime.now());
-                log.info("id为{}的任务已更新为暂停状态", e.getId());
+                log.debug("id为{}的任务已更新为暂停状态", e.getId());
             } else {
                 e.setStatus(1);
                 e.setUpdateTime(LocalDateTime.now());
                 e.setEndTime(LocalDateTime.now());
-                log.info("id为{}的任务已更新为开启状态", e.getId());
+                log.debug("id为{}的任务已更新为开启状态", e.getId());
             }
             try {
                 imgRecordTaskMapper.updateByPrimaryKey(e);

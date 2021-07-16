@@ -31,6 +31,7 @@ export function start(id) {
   return request({
     url: '/record/start',
     method: 'post',
+    timeout:10000,
     params: {
       taskId: id
     }
@@ -41,6 +42,7 @@ export function hasTask(id) {
   return request({
     url: '/record/hasTask',
     method: 'get',
+    timeout: 10000,
     params: {
       taskId: id
     }

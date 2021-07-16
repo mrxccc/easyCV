@@ -50,18 +50,16 @@
         <el-table-column label="操作"  align="center">
           <template slot-scope="scope">
             <el-button
-              size="mini"
               type="primary"
               v-if="scope.row.imgRecordTask.status == -1"
-              :loading="scope.row.imgRecordTask.status == 0"
+              :loading="scope.row.startLoading"
               @click="handleStart(scope.$index, scope.row)">启动</el-button>
             <el-button
-              size="mini"
               type="warning"
               v-if="scope.row.imgRecordTask.status == 1"
+              :loading="scope.row.stopLoading"
               @click="handleClose(scope.$index, scope.row)">关闭</el-button>
             <el-button
-              size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -90,11 +88,17 @@ export default {
     fetchData() {
       this.listLoading = true
       list().then(response => {
+        response.data.map(item => {
+          item.startLoading = false
+          item.stopLoading = false
+          return item
+        })
         this.list = response.data
         this.listLoading = false
       })
     },
     handleStart(index,row){
+      this.$set(this.list[index], `startLoading`, true)
       start(row.imgRecordTask.id).then(response => {
         if (response.code == 20000){
           this.$notify({
@@ -112,7 +116,7 @@ export default {
       })
     },
     handleClose(index,row){
-      row.imgRecordTask.status = 0
+      this.$set(this.list[index], `stopLoading`, true)
       stop(row.imgRecordTask.id).then(response => {
         if (response.code == 20000){
           this.$notify({
