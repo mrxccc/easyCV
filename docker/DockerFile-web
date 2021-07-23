@@ -1,0 +1,7 @@
+FROM alpine:latest
+
+ADD easycv-admin/easycv /tmp/easycv
+
+CMD cd /opt/project \
+  && rm -rf /opt/project/easycv \
+  && cp -r /tmp/dist/easycv /opt/project/easycv
